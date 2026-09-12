@@ -1,0 +1,18 @@
+[package]
+name = "embed-lambda"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "embed"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+lambda_runtime.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true

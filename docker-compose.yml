@@ -1,0 +1,45 @@
+name: interview-manager-dev
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: interview_manager
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U app -d interview_manager']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  localstack:
+    image: localstack/localstack:4
+    restart: unless-stopped
+    environment:
+      SERVICES: s3,sqs,ssm,stepfunctions,lambda,events
+      DEBUG: '0'
+      PERSISTENCE: '1'
+      AWS_DEFAULT_REGION: ap-southeast-1
+    ports:
+      - '4566:4566'
+    volumes:
+      - lsdata:/var/lib/localstack
+      - ./docker/localstack/init:/etc/localstack/init/ready.d:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://localhost:4566/_localstack/health | grep -Eq ''"s3": "(available|running)"'' ']
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  pgdata:
+  lsdata:
