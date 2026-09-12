@@ -41,3 +41,18 @@ variable "vercel_project_name" {
   type    = string
   default = "interview-manager"
 }
+
+variable "app_url" {
+  type    = string
+  default = "http://localhost:3000"
+}
+
+variable "ingest_max_pages" {
+  type    = number
+  default = 5
+}
+
+variable "location_llm_fallback" {
+  type    = bool
+  default = false
+}

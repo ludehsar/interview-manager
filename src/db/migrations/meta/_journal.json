@@ -15,6 +15,20 @@
       "when": 1789213424941,
       "tag": "0001_search_and_vector_indexes",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789222731009,
+      "tag": "0002_aspiring_namora",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789222735266,
+      "tag": "0003_jobs_sort_at",
+      "breakpoints": true
     }
   ]
 }

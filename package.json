@@ -18,7 +18,11 @@
     "db:studio": "drizzle-kit studio",
     "workers:build": "tsx scripts/build-workers.ts",
     "check:local": "tsx scripts/check-local.ts",
-    "check:adapters": "tsx scripts/check-adapters.ts"
+    "check:adapters": "tsx scripts/check-adapters.ts",
+    "seed:sources": "tsx scripts/seed-sources.ts",
+    "ingest:dispatch": "tsx scripts/run-worker-local.ts dispatch",
+    "ingest:drain": "tsx scripts/run-worker-local.ts drain",
+    "sweep": "tsx scripts/run-worker-local.ts sweep"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",
@@ -30,10 +34,12 @@
     "@neondatabase/serverless": "^1.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cn": "^0.2.6",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.45.0",
     "next": "16.3.4",
     "pg": "^8.23.0",
+    "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "svix": "^2.4.0",

@@ -29,6 +29,12 @@ pnpm check:local   # verifies postgres, pgvector, s3 and both sqs queues
 pnpm dev
 ```
 
+Job sources live in `src/adapters/`: applicant tracking systems (Greenhouse, Lever, Ashby,
+Workable, SmartRecruiters, Workday, Eightfold), Amazon's own search API, and curated remote
+boards (Remotive, We Work Remotely, Himalayas, Working Nomads, Jobicy, RemoteOK, Arbeitnow).
+`pnpm check:adapters` probes every one of them live and is the source of truth for whether a
+board still answers.
+
 `docker-compose.yml` runs two containers:
 
 | Service | Port | Contents |
@@ -78,8 +84,18 @@ pnpm build            # production build
 pnpm db:generate      # generate a Drizzle migration from schema.ts
 pnpm db:migrate       # apply migrations
 pnpm workers:build    # bundle Lambda handlers into dist/workers
+pnpm seed:sources     # load src/adapters/sources.ts into job_source_state
+pnpm check:adapters   # probe every job source live (--tier A, --kind lever, --save-fixtures)
+pnpm sweep            # dispatch + drain the ingest queue against LocalStack
+pnpm ingest:dispatch  # enqueue due sources only
+pnpm ingest:drain     # run the worker against whatever is queued
 cargo lambda build --arm64 --release    # build the Rust Lambdas
 ```
+
+`pnpm sweep --tier A --force` runs a full ingest: it enqueues every enabled Tier A
+source, runs the worker on each message, upserts jobs, deactivates postings the source
+stopped listing, and collapses lower-tier duplicates onto the tier A row. Re-running it
+is idempotent — row counts and `first_seen_at` do not move.
 
 `cargo lambda` needs Zig for cross-compilation (`brew install zig`).
 

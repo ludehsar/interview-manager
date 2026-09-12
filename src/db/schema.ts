@@ -277,6 +277,8 @@ export const jobs = pgTable(
     isActive: boolean('is_active').notNull().default(true),
     closedAt: timestamp('closed_at', { withTimezone: true }),
     fingerprint: text('fingerprint').notNull(),
+    canonicalJobId: text('canonical_job_id'),
+    contentHash: text('content_hash'),
     embedding: vector('embedding', { dimensions: EMBEDDING_DIMENSIONS }),
     embeddedAt: timestamp('embedded_at', { withTimezone: true }),
   },
@@ -285,8 +287,18 @@ export const jobs = pgTable(
     index('jobs_fingerprint_idx').on(t.fingerprint),
     index('jobs_source_seen_idx').on(t.sourceId, t.isActive, t.lastSeenAt),
     index('jobs_company_idx').on(t.company),
+    index('jobs_canonical_idx').on(t.canonicalJobId),
+    index('jobs_facet_idx').on(t.isActive, t.remoteRegion, t.employmentType, t.seniority),
   ],
 )
+
+export const locationRegions = pgTable('location_regions', {
+  normalized: text('normalized').primaryKey(),
+  region: remoteRegionEnum('region').notNull(),
+  countries: text('countries').array().notNull().default(sql`'{}'::text[]`),
+  origin: text('origin').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
 
 export const jobSourceState = pgTable('job_source_state', {
   sourceId: text('source_id').primaryKey(),

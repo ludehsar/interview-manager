@@ -1,0 +1,449 @@
+[
+  {
+    "id": "744000148984439",
+    "name": "Développeur·euse de données ",
+    "uuid": "92f20e0d-664f-403c-8e42-187f0de91ad2",
+    "jobAdId": "b3a1d5ac-e37a-42b7-9157-c9aa1ce1efff",
+    "defaultJobAd": true,
+    "refNumber": "REF31469Z",
+    "company": {
+      "name": "Ubisoft",
+      "identifier": "Ubisoft2"
+    },
+    "releasedDate": "2026-09-11T10:30:03.156Z",
+    "location": {
+      "city": "Montreal",
+      "region": "QC",
+      "country": "ca",
+      "remote": false,
+      "hybrid": false,
+      "latitude": "45.5018869",
+      "longitude": "-73.56739189999999",
+      "fullLocation": "Montreal, QC, Canada"
+    },
+    "industry": {
+      "id": "entertainment",
+      "label": "Entertainment"
+    },
+    "department": {
+      "id": 13847731,
+      "label": "Ubisoft"
+    },
+    "function": {
+      "id": "information_technology",
+      "label": "Information Technology"
+    },
+    "typeOfEmployment": {
+      "id": "permanent",
+      "label": "Full-time"
+    },
+    "experienceLevel": {
+      "id": "mid_senior_level",
+      "label": "Mid-Senior Level"
+    },
+    "customField": [
+      {
+        "fieldId": "56c253c2e4b0cabf01d19d37",
+        "fieldLabel": "Organizational Unit",
+        "valueId": "721c58b3-5e0f-4dca-baba-1c5580c3f39b",
+        "valueLabel": "Ubisoft IT"
+      },
+      {
+        "fieldId": "58b7e4d0e4b09a6d37a0cd8b",
+        "fieldLabel": "Department",
+        "valueId": "13847731",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "56c2539de4b0cabf01d19d36",
+        "fieldLabel": "Recruitment Programs",
+        "valueId": "cb9660da-dde8-48ec-ba09-d33d9bb77edc",
+        "valueLabel": "N/A"
+      },
+      {
+        "fieldId": "5bb3995c6d8bc56bc081b87d",
+        "fieldLabel": "Contract",
+        "valueId": "b5a86fc0-2681-4b3c-98b6-b73a4be23ef1",
+        "valueLabel": "Permanent"
+      },
+      {
+        "fieldId": "COUNTRY",
+        "fieldLabel": "Country/Region",
+        "valueId": "ca",
+        "valueLabel": "Canada"
+      },
+      {
+        "fieldId": "6904797c56f594d5ed50988d",
+        "fieldLabel": "Work flexibility",
+        "valueId": "ccb10278-8410-4710-b0e7-698fc2195139",
+        "valueLabel": "Office-based"
+      },
+      {
+        "fieldId": "68e4ce369c52964c7125078a",
+        "fieldLabel": "Job Family",
+        "valueId": "43fccb43-cd89-4548-ab8b-24ab8e79edec",
+        "valueLabel": "Software Development"
+      },
+      {
+        "fieldId": "56d1aa7ae4b0a07f777a4ef4",
+        "fieldLabel": "Brands",
+        "valueId": "default",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "6904811aa8fa2db78e2ee2ed",
+        "fieldLabel": "Job  Function",
+        "valueId": "04bddbab-4106-4bb0-b5b2-b6edfe367f07",
+        "valueLabel": "Software Development Data"
+      },
+      {
+        "fieldId": "691ca2ee342dfb96e5364508",
+        "fieldLabel": "Reference Job",
+        "valueId": "9f5f9daf-3971-4e67-bec0-6de4ee98cb1f",
+        "valueLabel": "Data Developer"
+      },
+      {
+        "fieldId": "6a158e3c77b1f5657b57af9d",
+        "fieldLabel": "Management Unit (New)",
+        "valueId": "f0bd3708-c5ff-47b1-9104-b83a1b4071d2",
+        "valueLabel": "UBISOFT"
+      },
+      {
+        "fieldId": "5def94650389ad3cc4be9d17",
+        "fieldLabel": "OU sub location (select when applicable)",
+        "valueId": "8282aec3-a755-4c6d-b27f-88e4344879af",
+        "valueLabel": "Canada"
+      }
+    ],
+    "visibility": "PUBLIC",
+    "ref": "https://api.smartrecruiters.com/v1/companies/Ubisoft2/postings/744000148984439",
+    "language": {
+      "code": "en",
+      "label": "English",
+      "labelNative": "English (US)"
+    },
+    "jobId": "d4d6cc23-3081-4158-863c-5805370c437f",
+    "creator": {
+      "name": "",
+      "avatarUrl": ""
+    },
+    "postingUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148984439-developpeur-euse-de-donnees-",
+    "applyUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148984439-developpeur-euse-de-donnees-?oga=true",
+    "referralUrl": "https://jobs.smartrecruiters.com/external-referrals/company/Ubisoft2/publication/92f20e0d-664f-403c-8e42-187f0de91ad2?dcr_ci=Ubisoft2",
+    "jobAd": {
+      "sections": {
+        "companyDescription": {
+          "title": "Company Description",
+          "text": "<p>Ubisoft est une référence mondiale du jeu vidéo, avec des équipes réparties aux quatre coins du monde qui créent des expériences de jeu originales et mémorables, de Assassin’s Creed à Rainbow Six en passant par Just Dance et bien d’autres encore. Nous croyons que la diversité des points de vue fait progresser à la fois les joueurs et les équipes. Si vous êtes passionné·e par l’innovation et que vous souhaitez repousser les limites du divertissement, rejoignez notre aventure et aidez-nous à créer l’inconnu!</p><p>&#xa0;</p>"
+        },
+        "jobDescription": {
+          "title": "Job Description",
+          "text": "<p>En tant que&#xa0;<strong>Développeur·euse&#xa0;de données</strong>&#xa0;à <strong>Ubisoft&#xa0;Montréal</strong>, vous intégrerez le domaine Joueur au sein du bureau des données d’Ubisoft. Vous serez responsable de la conception et de la livraison <strong>de&#xa0;chaînes de traitement de données&#xa0;répondant à des normes élevées de&#xa0;qualité</strong>, de&#xa0;performance&#xa0;et de&#xa0;maintenabilité, depuis la rédaction des spécifications techniques jusqu’à la mise en production. Vous collaborerez étroitement avec les équipes d’architecture afin d’assurer l’alignement avec la stratégie produit et les usages d’affaires.&#xa0;</p><p><strong>Ce&#xa0;que&#xa0;vous&#xa0;ferez&#xa0;&#xa0;</strong></p><ul><li><strong>Concevoir et maintenir des chaînes de traitement de données</strong>&#xa0;fiables et performantes&#xa0;&#xa0;</li><li><strong>Transformer les analyses produit en spécifications techniques détaillées</strong>&#xa0;en collaboration avec les analystes d’affaires&#xa0;&#xa0;</li><li><strong>Travailler avec les architectes&#xa0;pour concevoir</strong> des modèles et des tables de données efficaces&#xa0;&#xa0;</li><li><strong>Définir et suivre des indicateurs de qualité des données</strong>&#xa0;afin d’en assurer l’intégrité et la cohérence&#xa0;&#xa0;</li><li><strong>Rédiger et maintenir la documentation de tests,</strong> incluant les tests unitaires et fonctionnels&#xa0;&#xa0;</li><li><strong>Surveiller les environnements de production</strong>&#xa0;et contribuer à leur stabilité&#xa0;&#xa0;</li><li><strong>Communiquer l’avancement des travaux</strong>&#xa0;de manière claire, selon les publics visés&#xa0;&#xa0;</li><li>Détecter et <strong>résoudre les problèmes</strong> de façon proactive&#xa0;&#xa0;</li><li><strong>Concevoir et optimiser des processus d’extraction</strong>, de chargement et de transformation des données&#xa0;&#xa0;</li><li><strong>Veiller à l’alignement des solutions de données</strong>&#xa0;avec la stratégie produit et les besoins d’affaires&#xa0;</li></ul>"
+        },
+        "qualifications": {
+          "title": "Qualifications",
+          "text": "<ul><li>Excellente&#xa0;maîtrise&#xa0;du&#xa0;langage&#xa0;<strong>SQL&#xa0;&#xa0;</strong></li><li>Expérience avec la <strong>bibliothèque&#xa0;PySpark</strong>&#xa0;pour le traitement de données&#xa0;&#xa0;</li><li>Expérience avec des <strong>plateformes de données infonuagiques</strong>, telles que&#xa0;Databricks&#xa0;ou&#xa0;Snowflake&#xa0;&#xa0;</li><li>Bonne maîtrise d’un outil de gestion de versions, tel que Git&#xa0;&#xa0;</li><li><strong>Compétences en conception de processus de traitement</strong> de données&#xa0;efficaces&#xa0;&#xa0;</li><li>Expérience <strong>dans la mise en place d’indicateurs</strong> de qualité des données&#xa0;&#xa0;</li><li><strong>Aisance en communication</strong>&#xa0;et esprit de collaboration&#xa0;&#xa0;</li><li><strong>Autonomie&#xa0;et&#xa0;sens&#xa0;des&#xa0;responsabilités&#xa0;</strong></li></ul>"
+        },
+        "additionalInformation": {
+          "title": "Additional Information",
+          "text": "<p><strong>Ce qu’il faut nous envoyer</strong></p><ul><li>Votre CV mettant en valeur vos compétences et expériences</li><li>Des liens vers des projets techniques ou des dépôts de code démontrant votre travail</li></ul><p>&#xa0;</p>"
+        }
+      }
+    },
+    "active": true
+  },
+  {
+    "id": "744000148981739",
+    "name": "Web Tools Programmer - H/F/NB",
+    "uuid": "520860a9-abf1-4f32-8003-95aeea305c1d",
+    "jobAdId": "c51dd890-01bf-413c-b99c-a37769c7bb17",
+    "defaultJobAd": true,
+    "refNumber": "REF31719D",
+    "company": {
+      "name": "Ubisoft",
+      "identifier": "Ubisoft2"
+    },
+    "releasedDate": "2026-09-11T10:17:13.514Z",
+    "location": {
+      "city": "Paris",
+      "region": "IDF",
+      "country": "fr",
+      "remote": false,
+      "hybrid": false,
+      "latitude": "48.8575475",
+      "longitude": "2.3513765",
+      "fullLocation": "Paris, IDF, France"
+    },
+    "industry": {
+      "id": "entertainment",
+      "label": "Entertainment"
+    },
+    "department": {
+      "id": 13847731,
+      "label": "Ubisoft"
+    },
+    "function": {
+      "id": "engineering",
+      "label": "Engineering"
+    },
+    "typeOfEmployment": {
+      "id": "permanent",
+      "label": "Full-time"
+    },
+    "experienceLevel": {
+      "id": "mid_senior_level",
+      "label": "Mid-Senior Level"
+    },
+    "customField": [
+      {
+        "fieldId": "56c253c2e4b0cabf01d19d37",
+        "fieldLabel": "Organizational Unit",
+        "valueId": "940080fd-8618-4c6e-8db2-945da7831524",
+        "valueLabel": "Paris studio"
+      },
+      {
+        "fieldId": "58b7e4d0e4b09a6d37a0cd8b",
+        "fieldLabel": "Department",
+        "valueId": "13847731",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "5bb3995c6d8bc56bc081b87d",
+        "fieldLabel": "Contract",
+        "valueId": "b5a86fc0-2681-4b3c-98b6-b73a4be23ef1",
+        "valueLabel": "Permanent"
+      },
+      {
+        "fieldId": "COUNTRY",
+        "fieldLabel": "Country/Region",
+        "valueId": "fr",
+        "valueLabel": "France"
+      },
+      {
+        "fieldId": "6904797c56f594d5ed50988d",
+        "fieldLabel": "Work flexibility",
+        "valueId": "ccb10278-8410-4710-b0e7-698fc2195139",
+        "valueLabel": "Office-based"
+      },
+      {
+        "fieldId": "68e4ce369c52964c7125078a",
+        "fieldLabel": "Job Family",
+        "valueId": "43fccb43-cd89-4548-ab8b-24ab8e79edec",
+        "valueLabel": "Software Development"
+      },
+      {
+        "fieldId": "56d1aa7ae4b0a07f777a4ef4",
+        "fieldLabel": "Brands",
+        "valueId": "default",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "6904811aa8fa2db78e2ee2ed",
+        "fieldLabel": "Job  Function",
+        "valueId": "8e60dc05-6a4b-413f-b15f-d2835a159f14",
+        "valueLabel": "Software Development Core Tech"
+      },
+      {
+        "fieldId": "691ca2ee342dfb96e5364508",
+        "fieldLabel": "Reference Job",
+        "valueId": "54680edf-2930-4e71-b3d9-cf63f884ebf0",
+        "valueLabel": "Software Developer Core Tech Tools"
+      },
+      {
+        "fieldId": "6a158e3c77b1f5657b57af9d",
+        "fieldLabel": "Management Unit (New)",
+        "valueId": "36d02bfd-569a-4aef-9905-8679f578380c",
+        "valueLabel": "CREATIVE NETWORK"
+      },
+      {
+        "fieldId": "5def94650389ad3cc4be9d17",
+        "fieldLabel": "OU sub location (select when applicable)",
+        "valueId": "ac8ae7ad-70a6-491d-b848-4625c10b9609",
+        "valueLabel": "N/A"
+      }
+    ],
+    "visibility": "PUBLIC",
+    "ref": "https://api.smartrecruiters.com/v1/companies/Ubisoft2/postings/744000148981739",
+    "language": {
+      "code": "fr",
+      "label": "French",
+      "labelNative": "français"
+    },
+    "jobId": "dcf61871-2edd-43b9-b2fc-64b456060843",
+    "creator": {
+      "name": "",
+      "avatarUrl": ""
+    },
+    "postingUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148981739-web-tools-programmer-h-f-nb",
+    "applyUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148981739-web-tools-programmer-h-f-nb?oga=true",
+    "referralUrl": "https://jobs.smartrecruiters.com/external-referrals/company/Ubisoft2/publication/520860a9-abf1-4f32-8003-95aeea305c1d?dcr_ci=Ubisoft2",
+    "jobAd": {
+      "sections": {
+        "companyDescription": {
+          "title": "Description de l'entreprise",
+          "text": "<p>Ubisoft est une référence mondiale du jeu vidéo, avec des équipes réparties aux quatre coins du monde qui créent des expériences de jeu originales et mémorables, de Assassin’s Creed à Rainbow Six en passant par Just Dance et bien d’autres encore. Nous croyons que la diversité des points de vue fait progresser à la fois les joueurs et les équipes. Si vous êtes&#xa0;passionné·e&#xa0;par l’innovation et que vous souhaitez repousser les limites du divertissement, rejoignez notre aventure et aidez-nous à créer l’inconnu !&#xa0;</p><p>Studio pionnier d’Ubisoft, le studio de Paris est à l’origine des premiers succès de l’éditeur&#xa0;suite à&#xa0;sa création en 1992. Il est aujourd’hui à la tête de licences incontournables comme Just Dance,&#xa0;Ghost&#xa0;Recon&#xa0;ou Mario + The Lapins Crétins. Ubisoft Paris s’est également construit une solide réputation comme partenaire de choix dans les collaborations inter-studios comme Watch&#xa0;Dogs,&#xa0;Skull&#xa0;&amp;&#xa0;Bones, Beyond Good &amp;&#xa0;Evil&#xa0;2 ou encore Star Wars. Fort de cette expérience, le studio continue d’aller plus loin en termes de créativité en travaillant sur des projets très prometteurs encore non-annoncés.&#xa0;&#xa0;</p><p>Regroupant 750 talents de 35 nationalités, Ubisoft Paris est aujourd’hui le plus grand studio de France et l’un des plus expérimentés de l’industrie. Les jeunes talents peuvent bénéficier de la présence importante de profils seniors, dans les métiers créatifs, techniques ou artistiques.&#xa0;Chacun·e&#xa0;reste&#xa0;animé·e&#xa0;par la même passion : repousser les limites du possible et proposer de nouvelles expériences à nos joueurs et joueuses.&#xa0;</p><p>Prêt·es&#xa0;à rallier l’aventure ? Rejoignez-nous au&#xa0;<a href=\"https://paris.ubisoft.com/fr/\" rel=\"noopener noreferrer\">Studio de Paris</a>&#xa0;!&#xa0;</p>"
+        },
+        "jobDescription": {
+          "title": "Description du poste",
+          "text": "<p>En nous rejoignant en tant que <strong>Web Tools Programmer (H/F/NB)</strong>, vous intégrerez une équipe multidisciplinaire (data, programmation, game &amp; narrative design, animation, etc.), guidée par une question simple et ambitieuse : parmi toutes les possibilités offertes par l’IA générative, lesquelles sont réellement intéressantes et fun pour le gameplay ? L’équipe a pour mission de tester de nouvelles expériences auprès de joueurs et joueuses, et d’équiper les créateur·rices pour imaginer des interactions plus dynamiques, immersives et surprenantes — jusqu’à faire émerger des features impossibles à réaliser autrement.&#xa0;</p><p><strong>Ce que vous ferez :</strong></p><ul><li>Concevoir, développer et maintenir les interfaces et services de notre plateforme web,</li><li>Collaborer avec les équipes de production (game design, narrative design, programmation, IA, animation) afin de transformer leurs besoins en workflows simples, efficaces et intuitifs.</li><li>Imaginer, prototyper et faire évoluer des outils permettant aux créateur·rice·s de configurer, tester, observer et itérer sur des expériences génératives.</li><li>Développer des solutions robustes et évolutives, en contribuant aussi bien au front-end qu’aux services backend nécessaires à leur fonctionnement.</li><li>Recueillir les retours des utilisateur·rice·s, mesurer l’adoption des outils et améliorer continuellement l’expérience proposée.</li><li>Contribuer à l’architecture technique, à la qualité logicielle, à l’automatisation et aux pratiques de développement modernes de l’équipe.</li><li>Assurer une veille active sur les technologies web, l’IA générative et les nouveaux outils de développement afin d’identifier des opportunités d’innovation.</li></ul>"
+        },
+        "qualifications": {
+          "title": "Qualifications",
+          "text": "<ul><li>Expérience sur <strong>plusieurs projets de&#xa0;développement d’applications web modernes</strong>, avec une bonne compréhension des architectures web.</li><li>Maîtrise de <strong>TypeScript/JavaScript</strong> ainsi que des <strong>technologies web fondamentales </strong>(HTML, CSS) et d’un framework front-end moderne tel que React, Angular ou équivalent.</li><li>Expérience dans la conception d’interfaces connectées à des services backend et API.</li><li>Maitrise de <strong>Python </strong>et expérience en développement de backend.</li><li>Une expérience en C++ est un atout.</li><li>Sensibilité forte à<strong> l’expérience utilisateur </strong>et capacité à concevoir des workflows adaptés à différents métiers.</li><li>Expérience avec les pratiques modernes de développement logiciel (tests automatisés, CI/CD, qualité logicielle).</li><li>Autonomie, curiosité et esprit d’initiative.</li><li>Bonne capacité à collaborer dans un environnement multidisciplinaire et international.</li><li>Intérêt pour les technologies émergentes, l’IA générative et leur application à la création de jeux.</li></ul>"
+        },
+        "additionalInformation": {
+          "title": "Informations supplémentaires",
+          "text": "<p>En tant qu’employeur, Ubisoft offre à tous les mêmes opportunités d’accès à l’emploi,&#xa0;sans distinction&#xa0;notamment&#xa0;de genre, ethnicité, religion, orientation sexuelle, statut social, handicap et d’âge.&#xa0;Ubisoft veille à développer un environnement de travail inclusif qui reflète la diversité de sa communauté de joueurs dans ses équipes.</p>"
+        }
+      }
+    },
+    "active": true
+  },
+  {
+    "id": "744000148977854",
+    "name": "Lead UX & Tools - H/F/NB",
+    "uuid": "3685ce14-9f61-4c85-8ed9-3ee88a061205",
+    "jobAdId": "d13863a5-f981-4cf0-bf97-af423202a076",
+    "defaultJobAd": true,
+    "refNumber": "REF31720W",
+    "company": {
+      "name": "Ubisoft",
+      "identifier": "Ubisoft2"
+    },
+    "releasedDate": "2026-09-11T10:07:55.611Z",
+    "location": {
+      "city": "Paris",
+      "region": "IDF",
+      "country": "fr",
+      "remote": false,
+      "hybrid": false,
+      "latitude": "48.8575475",
+      "longitude": "2.3513765",
+      "fullLocation": "Paris, IDF, France"
+    },
+    "industry": {
+      "id": "entertainment",
+      "label": "Entertainment"
+    },
+    "department": {
+      "id": 13847731,
+      "label": "Ubisoft"
+    },
+    "function": {
+      "id": "engineering",
+      "label": "Engineering"
+    },
+    "typeOfEmployment": {
+      "id": "permanent",
+      "label": "Full-time"
+    },
+    "experienceLevel": {
+      "id": "mid_senior_level",
+      "label": "Mid-Senior Level"
+    },
+    "customField": [
+      {
+        "fieldId": "56c253c2e4b0cabf01d19d37",
+        "fieldLabel": "Organizational Unit",
+        "valueId": "940080fd-8618-4c6e-8db2-945da7831524",
+        "valueLabel": "Paris studio"
+      },
+      {
+        "fieldId": "58b7e4d0e4b09a6d37a0cd8b",
+        "fieldLabel": "Department",
+        "valueId": "13847731",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "5bb3995c6d8bc56bc081b87d",
+        "fieldLabel": "Contract",
+        "valueId": "b5a86fc0-2681-4b3c-98b6-b73a4be23ef1",
+        "valueLabel": "Permanent"
+      },
+      {
+        "fieldId": "COUNTRY",
+        "fieldLabel": "Country/Region",
+        "valueId": "fr",
+        "valueLabel": "France"
+      },
+      {
+        "fieldId": "6904797c56f594d5ed50988d",
+        "fieldLabel": "Work flexibility",
+        "valueId": "ccb10278-8410-4710-b0e7-698fc2195139",
+        "valueLabel": "Office-based"
+      },
+      {
+        "fieldId": "68e4ce369c52964c7125078a",
+        "fieldLabel": "Job Family",
+        "valueId": "43fccb43-cd89-4548-ab8b-24ab8e79edec",
+        "valueLabel": "Software Development"
+      },
+      {
+        "fieldId": "56d1aa7ae4b0a07f777a4ef4",
+        "fieldLabel": "Brands",
+        "valueId": "default",
+        "valueLabel": "Ubisoft"
+      },
+      {
+        "fieldId": "6904811aa8fa2db78e2ee2ed",
+        "fieldLabel": "Job  Function",
+        "valueId": "87275bb7-1162-40f0-b812-8af58edd1506",
+        "valueLabel": "Software Development Cross Functional Management"
+      },
+      {
+        "fieldId": "691ca2ee342dfb96e5364508",
+        "fieldLabel": "Reference Job",
+        "valueId": "abb01fc4-9299-457c-b247-40c472dcb278",
+        "valueLabel": "Software Development Manager"
+      },
+      {
+        "fieldId": "6a158e3c77b1f5657b57af9d",
+        "fieldLabel": "Management Unit (New)",
+        "valueId": "36d02bfd-569a-4aef-9905-8679f578380c",
+        "valueLabel": "CREATIVE NETWORK"
+      },
+      {
+        "fieldId": "5def94650389ad3cc4be9d17",
+        "fieldLabel": "OU sub location (select when applicable)",
+        "valueId": "ac8ae7ad-70a6-491d-b848-4625c10b9609",
+        "valueLabel": "N/A"
+      }
+    ],
+    "visibility": "PUBLIC",
+    "ref": "https://api.smartrecruiters.com/v1/companies/Ubisoft2/postings/744000148977854",
+    "language": {
+      "code": "fr",
+      "label": "French",
+      "labelNative": "français"
+    },
+    "jobId": "fcc80d37-3562-478b-a8b7-d35710245acb",
+    "creator": {
+      "name": "",
+      "avatarUrl": ""
+    },
+    "postingUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148977854-lead-ux-tools-h-f-nb",
+    "applyUrl": "https://jobs.smartrecruiters.com/Ubisoft2/744000148977854-lead-ux-tools-h-f-nb?oga=true",
+    "referralUrl": "https://jobs.smartrecruiters.com/external-referrals/company/Ubisoft2/publication/3685ce14-9f61-4c85-8ed9-3ee88a061205?dcr_ci=Ubisoft2",
+    "jobAd": {
+      "sections": {
+        "companyDescription": {
+          "title": "Description de l'entreprise",
+          "text": "<p>Ubisoft est une référence mondiale du jeu vidéo, avec des équipes réparties aux quatre coins du monde qui créent des expériences de jeu originales et mémorables, de Assassin’s Creed à Rainbow Six en passant par Just Dance et bien d’autres encore. Nous croyons que la diversité des points de vue fait progresser à la fois les joueurs et les équipes. Si vous êtes&#xa0;passionné·e&#xa0;par l’innovation et que vous souhaitez repousser les limites du divertissement, rejoignez notre aventure et aidez-nous à créer l’inconnu !&#xa0;</p><p>Studio pionnier d’Ubisoft, le studio de Paris est à l’origine des premiers succès de l’éditeur&#xa0;suite à&#xa0;sa création en 1992. Il est aujourd’hui à la tête de licences incontournables comme Just Dance,&#xa0;Ghost&#xa0;Recon&#xa0;ou Mario + The Lapins Crétins. Ubisoft Paris s’est également construit une solide réputation comme partenaire de choix dans les collaborations inter-studios comme Watch&#xa0;Dogs,&#xa0;Skull&#xa0;&amp;&#xa0;Bones, Beyond Good &amp;&#xa0;Evil&#xa0;2 ou encore Star Wars. Fort de cette expérience, le studio continue d’aller plus loin en termes de créativité en travaillant sur des projets très prometteurs encore non-annoncés.&#xa0;&#xa0;</p><p>Regroupant 750 talents de 35 nationalités, Ubisoft Paris est aujourd’hui le plus grand studio de France et l’un des plus expérimentés de l’industrie. Les jeunes talents peuvent bénéficier de la présence importante de profils seniors, dans les métiers créatifs, techniques ou artistiques.&#xa0;Chacun·e&#xa0;reste&#xa0;animé·e&#xa0;par la même passion : repousser les limites du possible et proposer de nouvelles expériences à nos joueurs et joueuses.&#xa0;</p><p>Prêt·es&#xa0;à rallier l’aventure ? Rejoignez-nous au&#xa0;<a href=\"https://paris.ubisoft.com/fr/\" rel=\"noopener noreferrer\">Studio de Paris</a>&#xa0;!&#xa0;</p>"
+        },
+        "jobDescription": {
+          "title": "Description du poste",
+          "text": "<p>En&#xa0;nous rejoignant en tant que&#xa0;<strong>Lead UX &amp; Tools (H/F/NB)</strong>, vous intégrerez une équipe multidisciplinaire (data, programmation,&#xa0;conception de jeu et de narration,&#xa0;animation, etc.), guidée par une question simple et ambitieuse: parmi toutes les possibilités offertes par l’IA générative,&#xa0;lesquelles sont réellement&#xa0;intéressantes&#xa0;et amusantes pour le gameplay&#xa0;?&#xa0;</p><p>L’équipe a pour mission de tester de nouvelles expériences&#xa0;auprès des joueur·euse·s, et d’équiper les créateur·rices pour imaginer des interactions plus dynamiques, immersives et surprenantes — jusqu’à faire émerger des&#xa0;fonctionnalités&#xa0;impossibles à réaliser autrement.&#xa0;</p><p>Au sein de l’équipe qui développe le produit technologique facilitant la création de ces expériences, vous dirigerez l’équipe Tools, responsable de bâtir un écosystème de création cohérent à travers l’ensemble de nos solutions.&#xa0;Ce rôle requiert une personne démontrant une attention marquée à l’expérience des utilisateur·trice·s finaux·ales (développeur·euse·s et artistes) dans l’ensemble des décisions de conception et de livraison.&#xa0;</p><p>La personne retenue devra également faire preuve d’une forte capacité à collaborer avec des équipes multidisciplinaires ainsi que d’un intérêt ou d’une expérience en IA et en apprentissage automatique, afin de guider l’équipe dans la mise en œuvre de solutions innovantes alignées sur une feuille de route ambitieuse.&#xa0;</p><p>Le scope de ce poste sera orienté sur trois axes :</p><p><strong>Leadership technique et livraison :&#xa0;</strong></p><ul><li>Concevoir des workflows pour les développeur·euse·s et les créateur·trice·s,</li><li>Diriger le développement d’outils d’édition, d’interfaces intégrées au moteur&#xa0;et de workflows destinés aux développeur·euse·s,</li><li>Promouvoir l’excellence en ingénierie à travers les tests automatisés, les pipelines CI/CD et la documentation,</li><li>S’assurer que les outils livrés répondent aux besoins réels des utilisateur·trice·s grâce à :&#xa0;&#xa0;<ul><li>la mise en place de protocoles de recherche utilisateur,</li><li>des cycles de rétroaction structurés tenant compte des contraintes techniques ainsi que des considérations UX et UI.&#xa0;</li></ul></li></ul><p><strong>Gestion d’équipe :&#xa0;</strong></p><ul><li>Gérer une équipe de développeur·euse·s full stack et favoriser le développement de leur expertise,</li><li>Planifier, prioriser, attribuer et suivre l’avancement du travail de l’équipe,</li><li>Accompagner et guider les membres de l’équipe sur les aspects techniques et créatifs.&#xa0;</li></ul><p><strong>Collaboration transversale :&#xa0;</strong></p><ul><li>Collaborer avec les équipes SDK, services en ligne/API et IA afin d’assurer l’alignement des requis et une intégration fluide dans les moteurs,&#xa0;</li><li>Travailler étroitement avec les équipes de production pour livrer des solutions pertinentes et faciles à déployer,</li><li>Arbitrer les décisions en tenant compte des contraintes techniques et de la qualité de l’expérience utilisateur,</li><li>Recueillir, interpréter et intégrer les retours des utilisateur·trice·s finaux·ales dans les priorités de l’équipe.&#xa0;</li></ul>"
+        },
+        "qualifications": {
+          "title": "Qualifications",
+          "text": "<p><strong>Ce que vous apporterez à l'équipe :</strong></p><ul><li>Vous avez déjà pu manager une équipe en développement,</li><li>Vous avez-vous-même déjà développé de multiples outils pour des moteurs de jeu, des outils web ou des plugins,</li><li>Vous avez une maîtrise, ou au moins de solides connaissances en apprentissage automatique ou en intelligence artificielle,</li><li>Vous avez de l’expérience en développement de plugins pour Unity, Unreal Engine, ou moteurs similaires, ou d'applications web (React, Angular ou équivalent).</li></ul><p><strong>Compétences techniques :</strong></p><ul><li>Compétences solides en TypeScript / JavaScript (outils web), Pytho, C++, C# (développement moteur / plugins),</li><li>Une expérience avec les moteurs de jeu Anvil ou Snowdrop serait un atout,</li><li>Vous avez une expérience en Figma &amp; Miro pour définir des expériences utilisateurs,</li><li>Vous avez une bonne compréhension des pipelines de production de jeux,</li><li>Enfin, avoir une formation en design thinking, en ergonomie logicielle et en recherche utilisateur serait un réel atout.</li></ul>"
+        },
+        "additionalInformation": {
+          "title": "Informations supplémentaires",
+          "text": "<p>En tant qu’employeur, Ubisoft offre à tous les mêmes opportunités d’accès à l’emploi,&#xa0;sans distinction&#xa0;notamment&#xa0;de genre, ethnicité, religion, orientation sexuelle, statut social, handicap et d’âge.&#xa0;Ubisoft veille à développer un environnement de travail inclusif qui reflète la diversité de sa communauté de joueurs dans ses équipes.</p>"
+        }
+      }
+    },
+    "active": true
+  }
+]

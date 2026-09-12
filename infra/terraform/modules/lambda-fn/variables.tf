@@ -18,7 +18,13 @@ variable "architecture" {
 }
 
 variable "package_path" {
-  type = string
+  type    = string
+  default = null
+}
+
+variable "source_dir" {
+  type    = string
+  default = null
 }
 
 variable "memory_mb" {

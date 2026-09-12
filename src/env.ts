@@ -12,15 +12,31 @@ const serverSchema = z.object({
   EMBED_QUEUE_URL: z.string().optional(),
   RESUME_STATE_MACHINE_ARN: z.string().optional(),
   EMBEDDING_PROVIDER: z.enum(['local', 'bedrock']).default('local'),
+  APP_URL: z.string().default('http://localhost:3000'),
+  REVALIDATE_SECRET: z.string().optional(),
+  ADAPTER_USER_AGENT: z.string().default('interview-manager/1.0 (+https://github.com)'),
+  INGEST_MAX_PAGES: z.coerce.number().int().positive().default(5),
+  LOCATION_LLM_FALLBACK: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((v) => v === 'true'),
 })
 
 export type ServerEnv = z.infer<typeof serverSchema>
 
 let cached: ServerEnv | null = null
 
+function withoutBlanks(source: NodeJS.ProcessEnv): Record<string, string | undefined> {
+  const cleaned: Record<string, string | undefined> = {}
+  for (const [key, value] of Object.entries(source)) {
+    cleaned[key] = value === '' ? undefined : value
+  }
+  return cleaned
+}
+
 export function serverEnv(): ServerEnv {
   if (cached) return cached
-  const parsed = serverSchema.safeParse(process.env)
+  const parsed = serverSchema.safeParse(withoutBlanks(process.env))
   if (!parsed.success) {
     const missing = parsed.error.issues.map((i) => i.path.join('.')).join(', ')
     throw new Error(`Invalid server environment: ${missing}`)

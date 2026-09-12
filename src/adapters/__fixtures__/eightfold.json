@@ -1,0 +1,223 @@
+[
+  {
+    "id": 790298014263,
+    "name": "AI Engineer 6 - AI Foundation & Tooling, Ads Platform",
+    "posting_name": "AI Engineer 6 - AI Foundation & Tooling, Ads Platform",
+    "location": "USA - Remote",
+    "locations": [
+      "USA - Remote"
+    ],
+    "hot": 1,
+    "department": "Data & Insights",
+    "business_unit": "Streaming",
+    "t_update": 1779148800,
+    "t_create": 1721692800,
+    "ats_job_id": "AJRT30201",
+    "display_job_id": "AJRT30201",
+    "type": "ATS",
+    "id_locale": "AJRT30201-en-US",
+    "job_description": "<p>At Netflix, our mission is to entertain the world. Together, we are writing the next episode - pushing the boundaries of storytelling, global fandom and making the unimaginable a reality. We are a dream team obsessed with the uncomfortable excitement of discovering what happens when you merge creativity, intuition and cutting-edge technology. Come be a part of what’s next.</p><p><a href=\"https://deadline.com/2022/11/netflix-ads-launch-what-to-know-1235162223/\" target=\"_blank\">We launched a new ad-supported tier</a><span> in November 2022 to offer our members more choice in how they consume their content. Our new tier allows us to attract new members at a lower price point, while also creating a compelling path for advertisers to reach audiences that are deeply engaged.</span></p><p></p><h2><span>Our Team</span></h2><p><span>The Ads Platform Engineering teams build advertising systems and integrations that powers the delivery of ads using our world class content delivery ecosystem. We use a number of Netflix investments and innovations to power our ads - unique mix of client and server side ad insertions, state of the art content delivery system, ad encoding recipes, content understanding and metadata etc. We deliver ads in a manner that’s thoughtful of our member’s viewing experience and drive great outcomes for advertisers. We also ensure that advertiser brand safety is ensured during serving, members only see the most appropriate ads for them.</span></p><p></p><h2><b><span>About the Role</span></b></h2><p><span>We&#39;re looking for a Staff AI Engineer to join us as the first dedicated AI engineer. Your core mission is to build the AI infrastructure and agentic workflows that transform how our team develops and operates software.</span></p><p></p><p><span>This is a greenfield opportunity. You won&#39;t be maintaining existing AI systems — you&#39;ll be designing and building them from scratch. Our team has active AI champions and early tooling already in production, but we need someone with deep hands-on experience to architect the foundational layer and accelerate our path to AI-native engineering. Our code footprint is reasonable today but expanding at an extraordinary pace; a core part of this role is striking the right balance between AI-driven speed and quality — shipping faster without accumulating slop, regressions, or accountability gaps. </span></p><p></p><p><span>This role focuses on applied AI — building production systems with existing models and tools, not training LLMs. You&#39;ll leverage large language models, agentic frameworks, and retrieval-augmented generation to solve real infrastructure and product problems, with a direct impact on how quickly and confidently the team can deliver in a competitive market.</span></p><p></p><h2><b><span>What You’ll Do</span></b></h2><p><b>AI Infrastructure &amp; Agentic Workflows</b></p><ul><li><p><span>Architect and build a centralized context layer that gives AI agents grounded, team-specific knowledge</span></p></li><li><p><span>Design and implement agentic workflows for the full development lifecycle: AI-assisted code generation, automated test creation, PR pre-review, and deployment validation</span></p></li><li><p><span>Build AI-powered operational workflows — automated incident triage, log and metric correlation, root cause analysis, and guided resolution</span></p></li><li><p><span>Develop multi-agent orchestration where parallel agents handle implementation, testing, and documentation as coordinated workflows</span></p></li><li><p><span>Set up standardized AI development environments so every engineer can work in an AI-first workflow from day one</span></p></li><li><p><span>Drive team-wide AI adoption through hands-on enablement — pairing sessions, architecture reviews, workflow demonstrations, and continuous feedback loops</span></p></li></ul><p></p><h2><b><span>Skills &amp; experience we’re seeking:</span></b></h2><ul><li><p><span>3&#43; years of significant  focus on applied AI systems</span></p></li><li><p><span>Proven experience building and deploying agentic AI systems in production — agent architectures, tool integration, orchestration, and evaluation frameworks</span></p></li><li><p><span>Hands-on experience setting up AI infrastructure for end-to-end software development workflows (AI coding assistants, context engineering, automated testing)</span></p></li><li><p><span>Strong software engineering fundamentals — you build production-grade systems, not just prototypes</span></p></li><li><p><span>Deep experience with retrieval-augmented generation — document indexing, embedding strategies, retrieval pipelines, and grounding techniques</span></p></li><li><p><span>Proficiency in Python and/or JVM languages</span></p></li><li><p><span>Demonstrated ability to drive technical adoption across a team — you can demonstrate value, build trust through pairing and architecture reviews, and bring engineers along on new workflows</span></p></li></ul><p></p><h2><b><span>Nice to haves:</span></b></h2><ul><li><p><span>Prior experience as the first or early AI engineer on a team — standing up AI capabilities where none previously existed, with the ownership and initiative of an early-stage environment</span></p></li><li><p><span>Familiarity with LLM application patterns: context engineering, tool use / function calling, structured outputs, multi-agent coordination, and evaluation / hill-climbing methodologies</span></p></li><li><p><span>Experience integrating AI into CI/CD pipelines (automated PR review, test generation, deployment validation)</span></p></li><li><p><span>Background in building operational tooling — incident response automation, log analysis, diagnostic workflows</span></p></li></ul><p></p><p> </p>Generally, our compensation structure consists solely of an annual salary; we do not have bonuses. You choose each year how much of your compensation you want in salary versus stock options. To determine your personal top of market compensation, we rely on market indicators and consider your specific job family, background, skills, and experience to determine your compensation in the market range. The range for this role is $600,000.00 - $1,066,000.00. This compensation range will vary based on location.<p></p><p>Netflix provides comprehensive benefits including Health Plans, Mental Health support, a 401(k) Retirement Plan with employer match, Stock Option Program, Disability Programs, Health Savings and Flexible Spending Accounts, Family-forming benefits, and Life and Serious Injury Benefits. We also offer paid leave of absence programs. Full-time hourly employees accrue 35 days annually for paid time off to be used for vacation, holidays, and sick paid time off. Full-time salaried employees are immediately entitled to flexible time off. See more details about our Benefits <a target=\"_blank\" href=\"https://jobs.netflix.com/work-life-philosophy\"><span style=\"color:#0000ff\"><u>here</u></span></a>.</p><p></p><p>Netflix is a unique culture and environment. Learn more <a target=\"_blank\" href=\"https://jobs.netflix.com/culture\"><span style=\"color:#005cb9\"><u>here</u></span></a>.</p><p></p><p><a target=\"_blank\" href=\"https://about.netflix.com/en/inclusion\"><span style=\"color:#005cb9\"><u>Inclusion</u></span></a><span style=\"color:#005cb9\"> </span>is a Netflix value and we strive to host a meaningful interview experience for all candidates. If you want an accommodation/adjustment for a disability or any other reason during the hiring process, please send a request to your recruiting partner.</p><p></p><p>We are an equal-opportunity employer and celebrate diversity, recognizing that diversity builds stronger teams. We approach diversity and inclusion seriously and thoughtfully. We do not discriminate on the basis of race, religion, color, ancestry, national origin, caste, sex, sexual orientation, gender, gender identity or expression, age, disability, medical condition, pregnancy, genetic makeup, marital status, or military service.</p><p></p><p>Job is open for no less than 7 days and will be removed when the position is filled.</p>",
+    "locale": "en-US",
+    "stars": 0,
+    "medallionProgram": null,
+    "location_flexibility": null,
+    "work_location_option": null,
+    "canonicalPositionUrl": "https://explore.jobs.netflix.net/careers/job/790298014263?microsite=netflix.com",
+    "isPrivate": false,
+    "urls": {
+      "links": {
+        "blogs": [],
+        "videos": []
+      }
+    },
+    "preApplyInfoBanner": {},
+    "custom_JD": {
+      "data_fields": {
+        "job_req_id": [
+          "AJRT30201"
+        ],
+        "posting_date": [
+          "09-02-2026"
+        ],
+        "team": [
+          "Data & Insights"
+        ],
+        "work_type": [
+          "Remote"
+        ],
+        "requisition_type": []
+      },
+      "display": [
+        {
+          "label": "Job Posting Date",
+          "value": "posting_date"
+        },
+        {
+          "label": "Job Requisition ID",
+          "value": "job_req_id"
+        },
+        {
+          "label": "Teams",
+          "value": "team"
+        },
+        {
+          "label": "Work Type",
+          "value": "work_type"
+        },
+        {
+          "label": "Requisition Type",
+          "value": "requisition_type"
+        }
+      ],
+      "enable": true
+    },
+    "hideUploadResumeOption": false
+  },
+  {
+    "id": 790318427402,
+    "name": "Manager, Applied AI - Title Launch Management",
+    "posting_name": "Manager, Applied AI - Title Launch Management",
+    "location": "Los Angeles,California,United States of America",
+    "locations": [
+      "Los Angeles,California,United States of America",
+      "Los Gatos,California,United States of America"
+    ],
+    "hot": 0,
+    "department": "Engineering",
+    "business_unit": "Streaming",
+    "t_update": 1789084800,
+    "t_create": 1789084800,
+    "ats_job_id": "JR42511",
+    "display_job_id": "JR42511",
+    "type": "ATS",
+    "id_locale": "JR42511-en-US",
+    "job_description": "<p>At Netflix, our mission is to entertain the world. Together, we are writing the next episode - pushing the boundaries of storytelling, global fandom and making the unimaginable a reality. We are a dream team obsessed with the uncomfortable excitement of discovering what happens when you merge creativity, intuition and cutting-edge technology. Come be a part of what’s next.</p><p></p><p>The <b>Title and Launch Management (TLM)</b> team is responsible for building and innovating the technology foundations that enable the ingest, setup, launch, and global distribution of all types of entertainment on Netflix—including series, movies, games, ads, live events, trailers, and more. TLM acts as the bridge between the title creation lifecycle and the consumer experience, ensuring that launching titles on Netflix is efficient, flexible, accurate, and scalable. Our team’s goal is to make launching titles as seamless as possible, supporting both operational and creative needs across the company.</p><p></p><p>The <b>TLM Data Science and Engineering</b> team drives automation and operational excellence in how we launch content. The team owns the data foundations, measurement workflows, reporting, and observability tooling, as well as AI/agentic solutions that make title launches faster, more automated, and less error‑prone from ingest through to being live and healthy on service. We develop systems that identify and classify issues,  automate resolution across a broad set of teams and systems, apply reasoning to identify risk, and increasingly, automate launch decisions.</p><p></p><p><b>What you will do</b></p><ul><li><p>Oversee a diverse portfolio of end-to-end initiatives that advance Netflix’s title launch strategy and support our rapidly growing content slate.</p></li><li><p>Lead the team in developing rigorous, scalable evaluation pipelines and safety guardrails to monitor launch speed, content and format diversity, technical spec compliance, and risk across our global catalog; analyze production failures and drive systematic improvements to model and workflow reliability.</p></li><li><p>Guide the team in designing feedback loops and data infrastructure that continuously bring high-quality real-user data into evaluation and training pipelines to improve performance over time.</p></li><li><p>Coach, hire and develop a team of machine learning scientists, analytics engineers, and data engineers, fostering an agile, high-quality development culture grounded in robust software engineering practices.</p></li><li><p>Partner closely with Product Management, Launch Operations, Partner Integration Managers, and multiple Engineering teams to identify opportunities, shape strategy, define roadmaps, drive execution, and deliver well-structured rollout plans.</p></li><li><p>Cultivate durable partnerships across product, engineering, and operations; communicate complex ideas clearly to various audiences; connect the dots across teams; and influence priorities beyond your immediate domain to jointly deliver outcomes.</p></li><li><p>Foster a culture of ownership and timely, reliable delivery against the roadmap while acting as a trusted technical advisor who balances business goals with strong engineering practices and continuous improvement.</p></li><li><p>Create an environment where everyone feels empowered, accepted, and respected, and where diverse perspectives are actively encouraged and valued.</p></li></ul><p></p><p><b>What we are looking for</b></p><ul><li><p>3&#43; years of direct management experience shipping production-grade AI/ML software with measurable business impact, building and managing high-performing, inclusive teams, attracting top talent, fostering accountability, and ensuring all voices inform decisions.</p></li><li><p>Proficiency in software engineering fundamentals and LLMs, RAG, and agentic architectures</p></li><li><p>Strong track record of designing and implementing evaluation pipelines for AI/ML products. Experience building safety guardrails to manage business risk and feedback loops for continuous improvement of models</p></li><li><p>Familiarity with ML evaluation methodologies (e.g., offline metrics, online experiments, human evaluation) and integrating them into continuous improvement processes.</p></li><li><p>Experience introducing automation into an established operational workflow earning operator trust, designing the human-in-the-loop handoff, and managing the change with the teams whose work is being automated.</p></li><li><p>Cultivate open communication, empowering team members to give feedback and recognize achievements and growth areas.</p></li><li><p>Strong product mindset; can translate high-level goals into clear team priorities and plans.</p></li><li><p>Skilled at prioritizing and aligning team efforts with business objectives, able to adjust direction based on impact and new information.</p></li><li><p>Effective collaborator who builds productive cross‑functional partnerships with product and engineering.</p></li><li><p>Uses data, feedback, and small experiments to reduce ambiguity and make sound decisions.</p></li><li><p>Communicates clearly with their team, stakeholders, and global partners.</p></li></ul><p></p><p><b>Nice to have</b></p><ul><li><p>Experience in the media technology domain (e.g. content processing, digital asset workflows, creative tools)</p></li><li><p>Technical proficiency with hands-on experience across the AI/ML lifecycle—ranging from traditional frameworks and MLOps platforms (e.g., PyTorch, TensorFlow, Metaflow) to modern LLM orchestration, agentic frameworks (e.g., LangGraph, DSPy, Agent SDK), and vector databases. </p></li></ul><p> </p>Generally, our compensation structure consists solely of an annual salary; we do not have bonuses. You choose each year how much of your compensation you want in salary versus stock options. To determine your personal top of market compensation, we rely on market indicators and consider your specific job family, background, skills, and experience to determine your compensation in the market range. The range for this role is .<p></p><p>Netflix provides comprehensive benefits including Health Plans, Mental Health support, a 401(k) Retirement Plan with employer match, Stock Option Program, Disability Programs, Health Savings and Flexible Spending Accounts, Family-forming benefits, and Life and Serious Injury Benefits. We also offer paid leave of absence programs. Full-time hourly employees accrue 35 days annually for paid time off to be used for vacation, holidays, and sick paid time off. Full-time salaried employees are immediately entitled to flexible time off. See more details about our Benefits <a target=\"_blank\" href=\"https://jobs.netflix.com/work-life-philosophy\"><span style=\"color:#005cb9\"><u>here</u></span></a>. </p><p></p><p>Netflix is a unique culture and environment. Learn more <a target=\"_blank\" href=\"https://jobs.netflix.com/culture\"><span style=\"color:#005cb9\"><u>here</u></span></a>.</p><p></p><p><a target=\"_blank\" href=\"https://about.netflix.com/en/inclusion\"><span style=\"color:#005cb9\"><u>Inclusion</u></span></a> is a Netflix value and we strive to host a meaningful interview experience for all candidates. If you want an accommodation/adjustment for a disability or any other reason during the hiring process, please send a request to your recruiting partner.</p><p></p><p>We are an equal-opportunity employer and celebrate diversity, recognizing that diversity builds stronger teams. We approach diversity and inclusion seriously and thoughtfully. We do not discriminate on the basis of race, religion, color, ancestry, national origin, caste, sex, sexual orientation, gender, gender identity or expression, age, disability, medical condition, pregnancy, genetic makeup, marital status, or military service.</p>",
+    "locale": "en-US",
+    "stars": 0,
+    "medallionProgram": null,
+    "location_flexibility": null,
+    "work_location_option": null,
+    "canonicalPositionUrl": "https://explore.jobs.netflix.net/careers/job/790318427402?microsite=netflix.com",
+    "isPrivate": false,
+    "urls": {
+      "links": {
+        "blogs": [],
+        "videos": []
+      }
+    },
+    "preApplyInfoBanner": {},
+    "custom_JD": {
+      "data_fields": {
+        "job_req_id": [
+          "JR42511"
+        ],
+        "posting_date": [
+          "09-11-2026"
+        ],
+        "team": [
+          "Engineering"
+        ],
+        "work_type": [
+          "Onsite"
+        ],
+        "requisition_type": []
+      },
+      "display": [
+        {
+          "label": "Job Posting Date",
+          "value": "posting_date"
+        },
+        {
+          "label": "Job Requisition ID",
+          "value": "job_req_id"
+        },
+        {
+          "label": "Teams",
+          "value": "team"
+        },
+        {
+          "label": "Work Type",
+          "value": "work_type"
+        },
+        {
+          "label": "Requisition Type",
+          "value": "requisition_type"
+        }
+      ],
+      "enable": true
+    },
+    "hideUploadResumeOption": false
+  },
+  {
+    "id": 790318443915,
+    "name": "Sales Partner",
+    "posting_name": "Sales Partner",
+    "location": "Madrid,Spain",
+    "locations": [
+      "Madrid,Spain"
+    ],
+    "hot": 0,
+    "department": "Advertising",
+    "business_unit": "Streaming",
+    "t_update": 1789084800,
+    "t_create": 1789084800,
+    "ats_job_id": "JR42526",
+    "display_job_id": "JR42526",
+    "type": "ATS",
+    "id_locale": "JR42526-en-US",
+    "job_description": "<p><span>Netflix is one of the world&#39;s leading entertainment services, with over 300 million paid memberships in over 190 countries enjoying TV series, films and games across a wide variety of genres and languages. Members can play, pause and resume watching as much as they want, anytime, anywhere, and can change their plans at any time.</span></p><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p><p><span>With the incredible launch of our ad-supported model, we are now working toward providing more choices for consumers and a premium brand experience for advertisers. We are now seeking a Sales Partner in Spain to help shape our sales strategy for Netflix in Spain.</span></p><p></p><p><span>As the Sales Partner in Spain, you will be responsible for the execution of the agency&#39;s sales strategy for Spain. You will work closely with the senior-level account director, account planning stakeholders, traders, and investment directors with our Agency partners. You will also start a strong relationship with the advertisers to evangelise the use of Netflix at a major Agency group and build key client relationships. </span></p><p></p><p><span>You will be accountable for delivering revenue targets by leveraging Netflix&#39;s unique audience insights and premium content offerings. You will work closely with our Measurement Leads to develop the best-in-class measurement solutions to meet our Clients’ needs. The role will also be a focal point for driving the necessary internal developments to ensure our success. Cross-functional collaboration with Account Managers, Ad Product, Marketing, Content and Partnership Development teams will be crucial.</span></p><p></p><p><span>The ideal candidate will have a deep understanding of the advertising ecosystem and a track record of delivering revenue growth.</span></p><p></p><p><b>Key Responsibilities:</b></p><ul><li><p><span>Develop and execute agency-focused sales for Spain to deliver revenue targets and exceed client expectations.</span></p></li><li><p><span>Build and maintain strong relationships with Agencies to secure ad partnerships and drive revenue growth.</span></p></li><li><p><span>Develop long-term relationships with key Clients within those portfolios.</span></p></li><li><p><span>Develop sales strategies and plans for the assigned Account portfolio </span></p></li><li><p><span>Collaborate with cross-functional teams to ensure the successful delivery of advertising campaigns.</span></p></li><li><p><span>Leverage Netflix&#39;s unique audience insights and premium content offerings to drive revenue growth.</span></p></li><li><p><span>Monitor market trends, competitor activity and identify opportunities for innovation.</span></p></li></ul><p></p><p><b>We’re Looking for:</b></p><ul><li><p><span>Approx. 8&#43; years of experience in media sales with a proven track record of delivering revenue growth</span></p></li><li><p><span>English and Spanish  language skills </span></p></li><li><p><span>Experience in programmatic required </span></p></li><li><p><span>TV and digital advertising is preferred</span></p></li><li><p><span>Strong knowledge of marketing objectives</span></p></li><li><p><span>Ability to move easily from strategic thinking to operational tasks</span></p></li><li><p><span>Deep understanding of the Media Agencies/Holding Companies </span></p></li><li><p><span>Strong analytical  capabilities</span></p></li><li><p><span>Excellent communication and presentation skills</span></p></li><li><p><span>Ability to work effectively and collaboratively, cross‐functionally</span></p></li><li><p><span>A passion for  entertainment</span></p></li></ul><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p><p style=\"text-align:left\"><a href=\"https://about.netflix.com/en/inclusion\" target=\"_blank\"><u>Inclusion</u></a><span> is a Netflix value and we strive to host a meaningful interview experience for all candidates. If you want an <span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span><span class=\"WHR0\">accommodation/adjustment</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span> for a disability or any other reason during the hiring process, please send a request to your recruiting partner.</span></p><p style=\"text-align:inherit\"></p><p style=\"text-align:left\"><span>We are an equal-opportunity employer and celebrate diversity, recognizing that diversity<span> </span>builds stronger teams. We approach diversity and inclusion seriously and thoughtfully. We do not discriminate on the basis of race, religion, color, ancestry, national origin, caste, sex, sexual orientation, gender, gender identity or expression, age, disability, medical condition, pregnancy, genetic makeup, marital status, or military service.</span></p>",
+    "locale": "en-US",
+    "stars": 0,
+    "medallionProgram": null,
+    "location_flexibility": null,
+    "work_location_option": null,
+    "canonicalPositionUrl": "https://explore.jobs.netflix.net/careers/job/790318443915?microsite=netflix.com",
+    "isPrivate": false,
+    "urls": {
+      "links": {
+        "blogs": [],
+        "videos": []
+      }
+    },
+    "preApplyInfoBanner": {},
+    "custom_JD": {
+      "data_fields": {
+        "job_req_id": [
+          "JR42526"
+        ],
+        "posting_date": [],
+        "team": [
+          "Advertising"
+        ],
+        "work_type": [
+          "Onsite"
+        ],
+        "requisition_type": []
+      },
+      "display": [
+        {
+          "label": "Job Posting Date",
+          "value": "posting_date"
+        },
+        {
+          "label": "Job Requisition ID",
+          "value": "job_req_id"
+        },
+        {
+          "label": "Teams",
+          "value": "team"
+        },
+        {
+          "label": "Work Type",
+          "value": "work_type"
+        },
+        {
+          "label": "Requisition Type",
+          "value": "requisition_type"
+        }
+      ],
+      "enable": true
+    },
+    "hideUploadResumeOption": false
+  }
+]

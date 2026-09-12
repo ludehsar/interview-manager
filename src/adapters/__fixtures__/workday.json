@@ -1,0 +1,112 @@
+[
+  {
+    "title": "Senior Software Engineer, NCCL",
+    "externalPath": "/job/US-CA-Santa-Clara/Senior-Software-Engineer--GPU-Communications-and-Networking_JR1997186",
+    "locationsText": "US, CA, Santa Clara",
+    "postedOn": "Posted Today",
+    "bulletFields": [
+      "JR1997186"
+    ],
+    "id": "2689cc868f8f1002076b39f7e9f00000",
+    "jobDescription": "<p><span>NVIDIA is leading the way in groundbreaking developments in Artificial Intelligence, High-Performance Computing and Visualization. The GPU, our invention, serves as the visual cortex of modern computers and is at the heart of our products and services. Our work opens up new universes to explore, enables amazing creativity and discovery, and powers what were once science fiction inventions from artificial intelligence to autonomous cars. NVIDIA is looking for phenomenal people like you to help us accelerate the next wave of artificial intelligence.</span></p><p></p><p><span>We are looking for a highly motivated senior software engineer for an exciting role in our communication libraries and network software team.</span> The position will be part of a fast-paced crew that develops and maintains software for complex heterogeneous computing systems that power disruptive products in High Performance Computing and Deep Learning.</p><p></p><p><b>What you will be doing:</b></p><ul><li><p>Design, implement and maintain highly-optimized communication runtimes for Deep Learning frameworks (e.g. NCCL for TensorFlow/Pytorch) and <span>HPC programming interfaces (e.g. UCX for MPI/OpenSHMEM) on GPU clusters.</span></p></li><li><p>Participating in and contributing to parallel programming interface specifications like MPI/OpenSHMEM.</p></li><li><p>Design, implement and maintain system software that enables interactions among GPUs and interactions between GPUs and other system components.</p></li><li><p>Creating proof-of-concepts to evaluate and motivate extensions in programming models, new designs in runtimes and new features in hardware.</p></li></ul><p></p><p><b>What we need to see:</b></p><ul><li><p>M.S./Ph.D. degree in CS/CE or equivalent experience.</p></li><li><p>5&#43; years of relevant experience.</p></li><li><p>Excellent C/C&#43;&#43; programming and debugging skills.</p></li><li><p>Strong experience with Linux.</p></li><li><p>Expert understanding of computer system architecture and operating systems.</p></li><li><p>Experience with parallel programming interfaces and communication runtimes.</p></li><li><p>Ability and flexibility to work and communicate effectively in a multi-national, multi-time-zone corporate environment.</p></li></ul><p></p><p><b>Ways to stand out from the crowd:</b></p><ul><li><p>Deep understanding of technology and passionate about what you do.</p></li><li><p>Experience with CUDA programming and NVIDIA GPUs.</p></li><li><p>Knowledge of high-performance networks like InfiniBand, iWARP etc.</p></li><li>Experience with HPC applications.</li><li>Experience with Deep Learning Frameworks such PyTorch, TensorFlow, etc.</li><li><p>Strong collaborative and interpersonal skills, specifically a proven ability to effectively guide and influence within a dynamic matrix environment.</p></li></ul><p></p><p>NVIDIA offers highly competitive salaries and a comprehensive benefits package. We have some of the most forward-thinking and talented people in the world working for us and, due to unprecedented growth, our world-class engineering teams are growing fast. If you&#39;re a creative and autonomous engineer with real passion for technology, we want to hear from you.</p><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>Your base salary will be determined based on your location, experience, and the pay of employees in similar positions. The base salary range is 152,000 USD - 241,500 USD for Level 3, and 184,000 USD - 287,500 USD for Level 4.<div><div><div><div><div><div><div><p></p><p><span>You will also be eligible for equity and <a href=\"https://www.nvidia.com/en-us/benefits/\" target=\"_blank\">benefits</a>.</span></p><p></p></div></div></div></div></div></div></div>Applications for this job will be accepted at least until September 16, 2026.<p></p><p>This posting is for an existing vacancy. </p><p>NVIDIA uses AI tools in its recruiting processes.</p><p></p>NVIDIA is committed to fostering an inclusive work environment and proud to be an equal opportunity employer. As we highly value diversity in our current and future employees, we do not discriminate (including in our hiring and promotion practices) on the basis of race, religion, color, national origin, gender, gender expression, sexual orientation, age, marital status, veteran status, disability status or any other characteristic protected by law.<p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>",
+    "location": "US, CA, Santa Clara",
+    "startDate": "2026-09-12",
+    "timeType": "Full time",
+    "jobReqId": "JR1997186",
+    "jobPostingId": "Senior-Software-Engineer--GPU-Communications-and-Networking_JR1997186",
+    "jobPostingSiteId": "NVIDIAExternalCareerSite",
+    "country": {
+      "descriptor": "United States of America",
+      "id": "bc33aa3152ec42d4995f4791a106ed09"
+    },
+    "canApply": true,
+    "posted": true,
+    "includeResumeParsing": true,
+    "jobRequisitionLocation": {
+      "descriptor": "US, CA, Santa Clara",
+      "country": {
+        "descriptor": "United States of America",
+        "id": "bc33aa3152ec42d4995f4791a106ed09",
+        "alpha2Code": "US"
+      }
+    },
+    "externalUrl": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Senior-Software-Engineer--GPU-Communications-and-Networking_JR1997186",
+    "questionnaireId": "3403860341171001f57d5c603f290000"
+  },
+  {
+    "title": "Senior Embedded Software Engineer, DPU - Networking",
+    "externalPath": "/job/US-MA-Westford/Senior-Software-Engineer--DPU---Networking_JR2017846",
+    "locationsText": "US, MA, Westford",
+    "postedOn": "Posted Yesterday",
+    "bulletFields": [
+      "JR2017846"
+    ],
+    "id": "34fad5d0d693100703ed07c34d9a0000",
+    "jobDescription": "<p>We are looking for a versatile Senior Software Engineer for the NVIDIA DPU Platform team.</p><p>This position offers the opportunity to have a real impact in a multifaceted, technology-focused company affecting product lines that empower the most advanced data centers in the world. Using your deep knowledge of embedded platforms, operating systems, and software distribution technologies, you will work with a world-wide development team to solve the unique challenges of delivering the world&#39;s most powerful platforms. Do you have broad experience with Linux and embedded platforms and a passion for building innovative products? If so, this position is for you!</p><p></p><p><b>What you&#39;ll be doing:</b></p><ul><li><p>Develop system software components including processor firmware, kernel drivers/modules, and user space applications and libraries</p></li><li><p>Collaborate with hardware and product design teams to develop software for sophisticated SOC platform designs</p></li><li><p>Assist world-wide teams with DPU project bring-up and validation</p></li><li><p>Tackle complex system-level optimization and resource utilization challenges</p></li><li><p>Work in pre-silicon development mode as you architect, debug, measure, and optimize performance while applying and extending the software simulator and hardware emulator test environments.</p></li><li><p>Participate across all levels of the product development life-cycle with high standards for clear requirements, software quality, and performance</p></li></ul><p></p><p><b>What we need to see:</b></p><ul><li><p>Bachelor of science or master&#39;s degree, or equivalent experience, with 6&#43; years of demonstrable experience in Linux and complex embedded systems development</p></li><li><p>Experience with Linux bootloader and boot firmware - ATF/UEFI a strong plus</p></li><li><p>Strong background in developing or maintaining Linux distributions, including user space libraries and applications, software update mechanisms</p></li><li><p>Enthusiasm for extending your technical knowledge into new areas</p></li><li><p>Strong analytical skills and proven success in problem-solving and achieving performance objectives</p></li></ul><p></p><p><b>Ways to stand out from the crowd:</b></p><ul><li><p>Experience with multiple Linux distributions, with the ability to compare and contrast them</p></li><li><p>Specialist knowledge of secure boot flows and/or trusted compute environments</p></li><li><p>Experience developing security key management solutions</p></li><li><p>Knowledge of secure software development practices</p></li><li><p>Experience developing and sustaining commercially available software products through a full product life-cycle.</p></li></ul><p></p><p>With competitive salaries and a comprehensive benefits package, NVIDIA is widely regarded as one of the most desirable technology employers in the world. Our teams are composed of some of the most forward‑thinking and driven engineers in the industry, and we continue to grow rapidly. If you are a senior data engineer passionate about building large‑scale, high‑impact data platforms, we’d love to hear from you.</p><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>Your base salary will be determined based on your location, experience, and the pay of employees in similar positions. The base salary range is 184,000 USD - 287,500 USD for Level 4, and 224,000 USD - 356,500 USD for Level 5.<div><div><div><div><div><div><div><p></p><p><span>You will also be eligible for equity and <a href=\"https://www.nvidia.com/en-us/benefits/\" target=\"_blank\">benefits</a>.</span></p><p></p></div></div></div></div></div></div></div>Applications for this job will be accepted at least until September 15, 2026.<p></p><p>This posting is for an existing vacancy. </p><p>NVIDIA uses AI tools in its recruiting processes.</p><p></p>NVIDIA is committed to fostering an inclusive work environment and proud to be an equal opportunity employer. As we highly value diversity in our current and future employees, we do not discriminate (including in our hiring and promotion practices) on the basis of race, religion, color, national origin, gender, gender expression, sexual orientation, age, marital status, veteran status, disability status or any other characteristic protected by law.<p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>",
+    "location": "US, MA, Westford",
+    "startDate": "2026-09-11",
+    "timeType": "Full time",
+    "jobReqId": "JR2017846",
+    "jobPostingId": "Senior-Software-Engineer--DPU---Networking_JR2017846",
+    "jobPostingSiteId": "NVIDIAExternalCareerSite",
+    "country": {
+      "descriptor": "United States of America",
+      "id": "bc33aa3152ec42d4995f4791a106ed09"
+    },
+    "canApply": true,
+    "posted": true,
+    "includeResumeParsing": true,
+    "jobRequisitionLocation": {
+      "descriptor": "US, MA, Westford",
+      "country": {
+        "descriptor": "United States of America",
+        "id": "bc33aa3152ec42d4995f4791a106ed09",
+        "alpha2Code": "US"
+      }
+    },
+    "externalUrl": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-MA-Westford/Senior-Software-Engineer--DPU---Networking_JR2017846",
+    "questionnaireId": "028095df097b1001ac9358c586600000"
+  },
+  {
+    "title": "Senior Software Engineer - DGX Cloud Production Engineering",
+    "externalPath": "/job/US-CA-Remote/Senior-Production-Engineer---DGX-Cloud_JR2018101",
+    "locationsText": "6 Locations",
+    "postedOn": "Posted Yesterday",
+    "bulletFields": [
+      "JR2018101"
+    ],
+    "id": "e6e51cf60ed310096654d7a90b470000",
+    "jobDescription": "<div>NVIDIA DGX Cloud is building and operating large-scale GPU infrastructure for AI research and production workloads. We are looking for Senior Software Engineers to help build the automation, tooling, and operational systems that make GPU clusters reliable, scalable, and safe to run. This role is part of a production engineering team focused on Kubernetes-based infrastructure, GPU cluster operations, reliability, automation, GitOps, and Day 2 operability across DGX Cloud environments.<br /><br /><b>What you’ll be doing:</b></div><ul><li>Build and operate automation for large-scale GPU clusters across NVIDIA Cloud Partners (NCP) and on-prem environments.</li><li>Develop tools and services for provisioning, validation, upgrades, monitoring, repair, and cluster lifecycle operations.</li><li>Improve Day 0 / Day 1 / Day 2 workflows for cluster bringup, handoff, and production operations.</li><li>Reduce manual production touches through APIs, GitOps, automation, and agent-assisted workflows.</li><li>Participate in on-call, incident response, debugging, and durable follow-up work.</li><li>Partner with platform, storage, networking, security, and workload teams to make infrastructure production-ready.</li></ul><div><br /><b>What we need to see:</b></div><ul><li>8&#43; years of experience building or operating production infrastructure.</li><li>Strong programming skills in Python, Go, or similar.</li><li>Experience with Linux, Kubernetes, containers, cloud infrastructure, or infrastructure automation.</li><li>Ability to troubleshoot distributed systems in production.</li><li>Clear communication and ability to work across teams.</li><li>BS/MS in Computer Science or equivalent experience.</li></ul><div><br /><b>Ways to stand out from the crowd:</b></div><ul><li>Experience with GPU infrastructure, Kubernetes operators, GitOps, Terraform, ArgoCD, or fleet automation.</li><li>Experience with SLOs, on-call, incident response, observability, and reliability practices.</li><li>Exposure to BMaaS, VMaaS, managed Kubernetes, or multi-cloud infrastructure.</li></ul><div><br />NVIDIA is leading the way in groundbreaking developments in Artificial Intelligence, High-Performance Computing and Visualization. The GPU, our invention, serves as the visual cortex of modern computers and is at the heart of our products and services. We have some of the most forward-thinking and hard-working people on the planet working for us. If you&#39;re creative, hard-working and self-motivated, we want to hear from you!</div><p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>Your base salary will be determined based on your location, experience, and the pay of employees in similar positions. The base salary range is 184,000 USD - 287,500 USD for Level 4, and 224,000 USD - 356,500 USD for Level 5.<div><div><div><div><div><div><div><p></p><p><span>You will also be eligible for equity and <a href=\"https://www.nvidia.com/en-us/benefits/\" target=\"_blank\">benefits</a>.</span></p><p></p></div></div></div></div></div></div></div>Applications for this job will be accepted at least until September 15, 2026.<p></p><p>This posting is for an existing vacancy. </p><p>NVIDIA uses AI tools in its recruiting processes.</p><p></p>NVIDIA is committed to fostering an inclusive work environment and proud to be an equal opportunity employer. As we highly value diversity in our current and future employees, we do not discriminate (including in our hiring and promotion practices) on the basis of race, religion, color, national origin, gender, gender expression, sexual orientation, age, marital status, veteran status, disability status or any other characteristic protected by law.<p style=\"text-align:inherit\"></p><p style=\"text-align:inherit\"></p>",
+    "location": "US, CA, Remote",
+    "additionalLocations": [
+      "US, NC, Remote",
+      "US, TX, Remote",
+      "US, CO, Remote",
+      "US, WA, Remote",
+      "US, Remote"
+    ],
+    "startDate": "2026-09-11",
+    "timeType": "Full time",
+    "jobReqId": "JR2018101",
+    "jobPostingId": "Senior-Production-Engineer---DGX-Cloud_JR2018101",
+    "jobPostingSiteId": "NVIDIAExternalCareerSite",
+    "country": {
+      "descriptor": "United States of America",
+      "id": "bc33aa3152ec42d4995f4791a106ed09"
+    },
+    "canApply": true,
+    "posted": true,
+    "includeResumeParsing": true,
+    "jobRequisitionLocation": {
+      "descriptor": "US, CA, Remote",
+      "country": {
+        "descriptor": "United States of America",
+        "id": "bc33aa3152ec42d4995f4791a106ed09",
+        "alpha2Code": "US"
+      }
+    },
+    "externalUrl": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite/job/US-CA-Remote/Senior-Production-Engineer---DGX-Cloud_JR2018101",
+    "questionnaireId": "2f2764b3a82910064296831695150000",
+    "endDate": "2026-12-14"
+  }
+]

@@ -71,3 +71,20 @@ resource "aws_budgets_budget" "monthly" {
     subscriber_email_addresses = [var.budget_alert_email]
   }
 }
+
+module "ingest" {
+  source = "../../modules/ingest"
+
+  name_prefix = local.name
+  dist_dir    = "${path.root}/../../../dist/workers"
+  ssm_prefix  = "/${local.name}"
+  tags        = local.tags
+
+  lambda_environment = {
+    APP_URL               = var.app_url
+    S3_BUCKET             = module.storage.bucket
+    INGEST_MAX_PAGES      = tostring(var.ingest_max_pages)
+    LOCATION_LLM_FALLBACK = tostring(var.location_llm_fallback)
+    SSM_PREFIX            = "/${local.name}"
+  }
+}
