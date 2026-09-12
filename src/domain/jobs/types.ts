@@ -10,6 +10,10 @@ export type Seniority = 'INTERN' | 'JUNIOR' | 'MID' | 'SENIOR' | 'STAFF' | 'PRIN
 
 export type RoleType = 'IC' | 'MANAGER' | 'UNKNOWN'
 
+export type WorkplaceType = 'REMOTE' | 'HYBRID' | 'ONSITE' | 'UNKNOWN'
+
+export type Discipline = 'SOFTWARE' | 'DATA' | 'PRODUCT' | 'DESIGN' | 'IT' | 'OTHER'
+
 export type RegionInput = {
   region: RemoteRegion
   countries: string[]
@@ -33,6 +37,8 @@ export type ParsedJob = {
   company: string
   companyDomain?: string | null
   locationRaw?: string | null
+  workplaceRaw?: string | null
+  countryHint?: string | null
   employmentType?: EmploymentType
   descriptionHtml?: string | null
   descriptionText?: string | null
@@ -54,6 +60,9 @@ export type NormalizedJob = {
   locationRaw: string | null
   remoteRegion: RemoteRegion
   countries: string[]
+  cities: string[]
+  workplaceType: WorkplaceType
+  discipline: Discipline
   employmentType: EmploymentType
   seniority: Seniority
   roleType: RoleType
@@ -78,6 +87,10 @@ export type JobListItem = Pick<
   | 'companyDomain'
   | 'locationRaw'
   | 'remoteRegion'
+  | 'cities'
+  | 'countries'
+  | 'workplaceType'
+  | 'discipline'
   | 'employmentType'
   | 'seniority'
   | 'skills'

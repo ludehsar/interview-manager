@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { RelativeTime } from '@/components/jobs/relative-time'
-import { formatEmployment, formatRegion, formatSalary, formatSeniority, formatTier } from '@/lib/format'
+import { formatEmployment, formatRegion, formatSalary, formatSeniority, formatTier, formatWorkplace } from '@/lib/format'
 import { getPublicJob, getRelatedJobs, getStaticJobIds } from '@/lib/jobs-data'
 
 export const revalidate = 3600
@@ -47,7 +47,13 @@ export default async function JobPage({ params }: PageProps<'/jobs/[id]'>) {
   const salary = formatSalary(job.salaryMinUsdMonth, job.salaryMaxUsdMonth)
 
   const facts: { icon: typeof MapPin; label: string; value: ReactNode }[] = [
-    { icon: MapPin, label: 'Location', value: job.locationRaw ?? 'Remote' },
+    {
+      icon: MapPin,
+      label: 'Location',
+      value: [job.locationRaw, job.workplaceType === 'UNKNOWN' ? null : formatWorkplace(job.workplaceType)]
+        .filter(Boolean)
+        .join(' · ') || 'Remote',
+    },
     { icon: Wallet, label: 'Salary', value: salary ?? 'Not listed' },
     { icon: CalendarDays, label: 'Posted', value: <RelativeTime date={job.postedAt} /> },
     { icon: Building2, label: 'Source', value: formatTier(job.tier) },

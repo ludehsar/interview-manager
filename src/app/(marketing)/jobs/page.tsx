@@ -21,7 +21,6 @@ const REGION_TABS: { label: string; value: RemoteRegion | undefined }[] = [
   { label: 'All', value: undefined },
   { label: 'Worldwide', value: 'WORLDWIDE' },
   { label: 'APAC', value: 'APAC' },
-  { label: 'Bangladesh', value: 'BANGLADESH' },
 ]
 
 function SortToggle({ filters }: { filters: JobFilters }) {

@@ -1,79 +1,70 @@
 import { sql, type SQL } from 'drizzle-orm'
-import { z } from 'zod'
 import { db } from '@/db/client'
-import type { EmploymentType, JobListItem, RemoteRegion, RoleType, Seniority, SourceTier } from './types'
+import { isSearchEnabled } from '@/search/client'
+import { countJobsIndex, loadFacetsIndex, searchJobsIndex } from '@/search/jobs-search'
+import {
+  DEFAULT_PAGE_SIZE,
+  type FacetBucket,
+  type JobCursor,
+  type JobFacets,
+  type JobFilters,
+  type JobPage,
+  encodeCursor,
+} from './filters'
+import { TECH_DISCIPLINES } from './discipline'
+import { splitLocationTokens } from './location'
+import type {
+  Discipline,
+  EmploymentType,
+  JobListItem,
+  RemoteRegion,
+  Seniority,
+  SourceTier,
+  WorkplaceType,
+} from './types'
 
-export const DEFAULT_PAGE_SIZE = 25
+export {
+  DEFAULT_PAGE_SIZE,
+  decodeCursor,
+  encodeCursor,
+  EMPTY_FACETS,
+  type FacetBucket,
+  type JobCursor,
+  type JobFacets,
+  type JobFilters,
+  type JobPage,
+  type JobSort,
+} from './filters'
 
-export type JobSort = 'recent' | 'relevance'
-
-export type JobFilters = {
-  q?: string
-  region?: RemoteRegion[]
-  employmentType?: EmploymentType[]
-  seniority?: Seniority[]
-  roleType?: RoleType[]
-  skills?: string[]
-  company?: string
-  salaryMinUsdMonth?: number
-  tier?: SourceTier[]
-  postedWithinDays?: number
-  sort: JobSort
-}
-
-const cursorSchema = z.object({
-  s: z.enum(['recent', 'relevance']),
-  t: z.string(),
-  i: z.string(),
-  r: z.number().optional(),
-})
-
-export type JobCursor = z.infer<typeof cursorSchema>
-
-export type JobPage = {
-  items: JobListItem[]
-  nextCursor: string | null
-}
-
-export type FacetBucket = { value: string; count: number }
-
-export type JobFacets = {
-  region: FacetBucket[]
-  employmentType: FacetBucket[]
-  seniority: FacetBucket[]
-  tier: FacetBucket[]
-  skills: FacetBucket[]
-}
-
-export function encodeCursor(cursor: JobCursor): string {
-  return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url')
-}
-
-export function decodeCursor(raw: string | null | undefined, sort: JobSort): JobCursor | null {
-  if (!raw) return null
-  try {
-    const parsed = cursorSchema.safeParse(JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')))
-    if (!parsed.success) return null
-    if (parsed.data.s !== sort) return null
-    if (parsed.data.s === 'relevance' && typeof parsed.data.r !== 'number') return null
-    return parsed.data
-  } catch {
-    return null
-  }
-}
+const LOCATION_FACET_SIZE = 150
+const SKILL_FACET_SIZE = 200
 
 function rankExpression(q: string): SQL {
   return sql`ts_rank_cd(j.search_vector, websearch_to_tsquery('english', ${q}))`
 }
 
 export function buildConditions(filters: JobFilters, skip?: keyof JobFilters): SQL[] {
-  const conds: SQL[] = [sql`j.is_active`, sql`j.canonical_job_id is null`]
+  const conds: SQL[] = [
+    sql`j.is_active`,
+    sql`j.canonical_job_id is null`,
+    sql`j.discipline = any(${sql.param(TECH_DISCIPLINES)}::discipline[])`,
+  ]
 
   if (filters.q && skip !== 'q') {
     conds.push(sql`j.search_vector @@ websearch_to_tsquery('english', ${filters.q})`)
   }
   if (filters.region?.length && skip !== 'region') {
     conds.push(sql`j.remote_region = any(${sql.param(filters.region)}::remote_region[])`)
+  }
+  if (filters.locations?.length && skip !== 'locations') {
+    const { cities, countries } = splitLocationTokens(filters.locations)
+    const parts: SQL[] = []
+    if (cities.length) parts.push(sql`j.cities && ${sql.param(cities)}::text[]`)
+    if (countries.length) parts.push(sql`j.countries && ${sql.param(countries)}::text[]`)
+    if (parts.length) conds.push(sql`(${sql.join(parts, sql` or `)})`)
+  }
+  if (filters.workplaceType?.length && skip !== 'workplaceType') {
+    conds.push(sql`j.workplace_type = any(${sql.param(filters.workplaceType)}::workplace_type[])`)
   }
   if (filters.employmentType?.length && skip !== 'employmentType') {
     conds.push(sql`j.employment_type = any(${sql.param(filters.employmentType)}::employment_type[])`)
@@ -114,6 +105,10 @@ type JobQueryRow = {
   company_domain: string | null
   location_raw: string | null
   remote_region: RemoteRegion
+  cities: string[]
+  countries: string[]
+  workplace_type: WorkplaceType
+  discipline: Discipline
   employment_type: EmploymentType
   seniority: Seniority
   skills: string[]
@@ -134,6 +129,10 @@ function toListItem(row: JobQueryRow): JobListItem {
     companyDomain: row.company_domain,
     locationRaw: row.location_raw,
     remoteRegion: row.remote_region,
+    cities: row.cities ?? [],
+    countries: row.countries ?? [],
+    workplaceType: row.workplace_type,
+    discipline: row.discipline,
     employmentType: row.employment_type,
     seniority: row.seniority,
     skills: row.skills ?? [],
@@ -146,7 +145,26 @@ function toListItem(row: JobQueryRow): JobListItem {
   }
 }
 
+function onSearchError(scope: string, error: unknown): void {
+  console.error(`opensearch ${scope} failed, falling back to postgres:`, error)
+}
+
 export async function searchJobs(
+  filters: JobFilters,
+  cursor: JobCursor | null,
+  limit = DEFAULT_PAGE_SIZE,
+): Promise<JobPage> {
+  if (isSearchEnabled()) {
+    try {
+      return await searchJobsIndex(filters, cursor, limit)
+    } catch (error) {
+      onSearchError('search', error)
+    }
+  }
+  return searchJobsSql(filters, cursor, limit)
+}
+
+export async function searchJobsSql(
   filters: JobFilters,
   cursor: JobCursor | null,
   limit = DEFAULT_PAGE_SIZE,
@@ -170,6 +188,7 @@ export async function searchJobs(
 
   const query = sql`
     select j.id, j.title, j.company, j.company_domain, j.location_raw, j.remote_region,
+           j.cities, j.countries, j.workplace_type, j.discipline,
            j.employment_type, j.seniority, j.skills, j.salary_min_usd_month, j.salary_max_usd_month,
            j.tier, j.excerpt, j.posted_at, j.sort_at${selection}
     from jobs j
@@ -199,6 +218,17 @@ export async function searchJobs(
 }
 
 export async function countJobs(filters: JobFilters): Promise<number> {
+  if (isSearchEnabled()) {
+    try {
+      return await countJobsIndex(filters)
+    } catch (error) {
+      onSearchError('count', error)
+    }
+  }
+  return countJobsSql(filters)
+}
+
+export async function countJobsSql(filters: JobFilters): Promise<number> {
   const result = await db().execute(sql`
     select count(*)::int as total from jobs j where ${whereClause(buildConditions(filters))}
   `)
@@ -207,6 +237,17 @@ export async function countJobs(filters: JobFilters): Promise<number> {
 }
 
 export async function loadFacets(filters: JobFilters): Promise<JobFacets> {
+  if (isSearchEnabled()) {
+    try {
+      return await loadFacetsIndex(filters)
+    } catch (error) {
+      onSearchError('facets', error)
+    }
+  }
+  return loadFacetsSql(filters)
+}
+
+export async function loadFacetsSql(filters: JobFilters): Promise<JobFacets> {
   const branch = (facet: string, column: string, skip: keyof JobFilters) =>
     sql`select ${sql.raw(`'${facet}'`)} as facet, ${sql.raw(column)}::text as value, count(*)::int as count
         from jobs j where ${whereClause(buildConditions(filters, skip))} group by 2`
@@ -214,11 +255,11 @@ export async function loadFacets(filters: JobFilters): Promise<JobFacets> {
   const enumFacets = await db().execute(sql`
     ${branch('region', 'j.remote_region', 'region')}
     union all
+    ${branch('workplace_type', 'j.workplace_type', 'workplaceType')}
+    union all
     ${branch('employment_type', 'j.employment_type', 'employmentType')}
     union all
     ${branch('seniority', 'j.seniority', 'seniority')}
-    union all
-    ${branch('tier', 'j.tier', 'tier')}
   `)
 
   const skillFacets = await db().execute(sql`
@@ -227,11 +268,24 @@ export async function loadFacets(filters: JobFilters): Promise<JobFacets> {
     where ${whereClause(buildConditions(filters, 'skills'))}
     group by 1
     order by count desc, value asc
-    limit 20
+    limit ${SKILL_FACET_SIZE}
+  `)
+
+  const locationFacets = await db().execute(sql`
+    (select 'city:' || value as value, count(*)::int as count
+     from (select unnest(j.cities) as value from jobs j
+           where ${whereClause(buildConditions(filters, 'locations'))}) cities
+     group by 1 order by count desc, value asc limit ${LOCATION_FACET_SIZE})
+    union all
+    (select 'country:' || value as value, count(*)::int as count
+     from (select unnest(j.countries) as value from jobs j
+           where ${whereClause(buildConditions(filters, 'locations'))}) countries
+     group by 1 order by count desc, value asc limit ${LOCATION_FACET_SIZE})
   `)
 
   const enumRows = (enumFacets.rows ?? enumFacets) as unknown as { facet: string; value: string; count: number }[]
-  const skillRows = (skillFacets.rows ?? skillFacets) as unknown as { value: string; count: number }[]
+  const skillRows = (skillFacets.rows ?? skillFacets) as unknown as FacetBucket[]
+  const locationRows = (locationFacets.rows ?? locationFacets) as unknown as FacetBucket[]
   const pick = (facet: string) =>
     enumRows
       .filter((row) => row.facet === facet)
@@ -240,10 +294,13 @@ export async function loadFacets(filters: JobFilters): Promise<JobFacets> {
 
   return {
     region: pick('region'),
+    locations: [...locationRows]
+      .map((row) => ({ value: row.value, count: Number(row.count) }))
+      .sort((a, b) => b.count - a.count),
+    workplaceType: pick('workplace_type'),
     employmentType: pick('employment_type'),
     seniority: pick('seniority'),
-    tier: pick('tier'),
-    skills: skillRows.map((row) => ({ value: row.value, count: row.count })),
+    skills: skillRows.map((row) => ({ value: row.value, count: Number(row.count) })),
   }
 }
 

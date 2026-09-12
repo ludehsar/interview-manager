@@ -1,5 +1,6 @@
 import { amazonAdapter } from './amazon'
 import { arbeitnowAdapter } from './arbeitnow'
+import { bdjobsAdapter } from './bdjobs'
 import { ashbyAdapter } from './ashby'
 import { eightfoldAdapter } from './eightfold'
 import { greenhouseAdapter } from './greenhouse'
@@ -9,9 +10,11 @@ import { leverAdapter } from './lever'
 import { remoteOkAdapter } from './remoteok'
 import { remotiveAdapter } from './remotive'
 import { smartRecruitersAdapter } from './smartrecruiters'
+import { successFactorsAdapter } from './successfactors'
 import { workableAdapter } from './workable'
 import { workdayAdapter } from './workday'
 import { workingNomadsAdapter } from './workingnomads'
+import { wpJobsAdapter } from './wpjobs'
 import { wwrAdapter } from './wwr'
 import type { Adapter, AdapterKind } from './types'
 
@@ -31,6 +34,9 @@ export const ADAPTERS: Record<AdapterKind, Adapter> = {
   arbeitnow: arbeitnowAdapter,
   jobicy: jobicyAdapter,
   remoteok: remoteOkAdapter,
+  bdjobs: bdjobsAdapter,
+  wpjobs: wpJobsAdapter,
+  successfactors: successFactorsAdapter,
 }
 
 export function getAdapter(kind: AdapterKind): Adapter {

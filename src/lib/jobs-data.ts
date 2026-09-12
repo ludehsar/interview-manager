@@ -89,6 +89,8 @@ export async function getSavedJobs(userId: string, state?: 'SAVED' | 'APPLIED' |
       companyDomain: jobs.companyDomain,
       locationRaw: jobs.locationRaw,
       remoteRegion: jobs.remoteRegion,
+      workplaceType: jobs.workplaceType,
+      discipline: jobs.discipline,
       employmentType: jobs.employmentType,
       seniority: jobs.seniority,
       skills: jobs.skills,

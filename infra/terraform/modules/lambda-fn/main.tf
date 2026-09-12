@@ -46,15 +46,9 @@ resource "aws_cloudwatch_log_group" "this" {
 }
 
 data "archive_file" "package" {
-  count       = var.source_dir == null ? 0 : 1
   type        = "zip"
   source_dir  = var.source_dir
   output_path = "${var.source_dir}.zip"
-}
-
-locals {
-  package_file = var.source_dir == null ? var.package_path : data.archive_file.package[0].output_path
-  package_hash = var.source_dir == null ? filebase64sha256(var.package_path) : data.archive_file.package[0].output_base64sha256
 }
 
 resource "aws_lambda_function" "this" {
@@ -63,8 +57,8 @@ resource "aws_lambda_function" "this" {
   handler          = var.handler
   runtime          = var.runtime
   architectures    = [var.architecture]
-  filename         = local.package_file
-  source_code_hash = local.package_hash
+  filename         = data.archive_file.package.output_path
+  source_code_hash = data.archive_file.package.output_base64sha256
   memory_size      = var.memory_mb
   timeout          = var.timeout_s
   tags             = var.tags

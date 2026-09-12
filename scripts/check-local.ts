@@ -4,6 +4,8 @@ import { HeadBucketCommand, ListBucketsCommand } from '@aws-sdk/client-s3'
 import { GetQueueAttributesCommand } from '@aws-sdk/client-sqs'
 import { closeDatabase, db } from '@/db/client'
 import { s3Client, sqsClient } from '@/aws/clients'
+import { isSearchEnabled, searchConfig, searchRequest } from '@/search/client'
+import { indexExists } from '@/search/jobs-index'
 
 config({ path: '.env', quiet: true })
 config({ path: '.env.local', override: true, quiet: true })
@@ -57,8 +59,24 @@ async function checkAws(): Promise<Check[]> {
   return checks
 }
 
+async function checkSearch(): Promise<Check[]> {
+  if (!isSearchEnabled()) return [{ name: 'opensearch', detail: 'OPENSEARCH_URL not set, postgres search in use' }]
+
+  const health = await searchRequest<{ status: string; number_of_nodes: number }>('GET', '/_cluster/health')
+  const config = searchConfig()
+  const exists = await indexExists()
+  const count = exists
+    ? await searchRequest<{ count: number }>('GET', `/${config?.index}/_count`).then((result) => result.count)
+    : 0
+
+  return [
+    { name: 'opensearch', detail: `${health.status} (${health.number_of_nodes} node)` },
+    { name: 'jobs index', detail: exists ? `${config?.index} with ${count} documents` : `${config?.index} not created yet` },
+  ]
+}
+
 async function main() {
-  const checks = [...(await checkDatabase()), ...(await checkAws())]
+  const checks = [...(await checkDatabase()), ...(await checkAws()), ...(await checkSearch())]
   for (const check of checks) {
     console.log(`ok  ${check.name.padEnd(16)} ${check.detail}`)
   }

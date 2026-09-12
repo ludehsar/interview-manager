@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import amazonFixture from './__fixtures__/amazon.json'
 import arbeitnowFixture from './__fixtures__/arbeitnow.json'
 import ashbyFixture from './__fixtures__/ashby.json'
+import bdjobsFixture from './__fixtures__/bdjobs.json'
 import eightfoldFixture from './__fixtures__/eightfold.json'
 import greenhouseFixture from './__fixtures__/greenhouse.json'
 import himalayasFixture from './__fixtures__/himalayas.json'
@@ -12,9 +13,14 @@ import leverFixture from './__fixtures__/lever.json'
 import remoteokFixture from './__fixtures__/remoteok.json'
 import remotiveFixture from './__fixtures__/remotive.json'
 import smartrecruitersFixture from './__fixtures__/smartrecruiters.json'
+import successfactorsFixture from './__fixtures__/successfactors.json'
+import successfactorsHtml from './__fixtures__/successfactors-html.json'
 import workableFixture from './__fixtures__/workable.json'
+import wpjobsFixture from './__fixtures__/wpjobs.json'
 import workdayFixture from './__fixtures__/workday.json'
 import workingnomadsFixture from './__fixtures__/workingnomads.json'
+import { queryFor } from './bdjobs'
+import { parseDescription, parseSearchRows } from './successfactors'
 import { getAdapter } from './registry'
 import { workdayLocation } from './workday'
 import { parseRssItems } from './rss'
@@ -46,6 +52,9 @@ const cases: { kind: AdapterKind; tier: SourceDefinition['tier']; payload: unkno
   { kind: 'arbeitnow', tier: 'C', payload: arbeitnowFixture as unknown[] },
   { kind: 'jobicy', tier: 'C', payload: jobicyFixture as unknown[] },
   { kind: 'remoteok', tier: 'C', payload: remoteokFixture as unknown[] },
+  { kind: 'bdjobs', tier: 'B', payload: bdjobsFixture as unknown[] },
+  { kind: 'wpjobs', tier: 'A', payload: wpjobsFixture as unknown[] },
+  { kind: 'successfactors', tier: 'A', payload: successfactorsFixture as unknown[] },
 ]
 
 describe.each(cases)('$kind adapter', ({ kind, tier, payload }) => {
@@ -160,5 +169,91 @@ describe('workday location', () => {
     expect(workdayLocation({ locationsText: 'US, CA, Santa Clara' })).toBe('US, CA, Santa Clara')
     expect(workdayLocation({ location: 'US, CA, Remote', locationsText: '5 Locations' })).toBe('US, CA, Remote')
     expect(workdayLocation({})).toBeNull()
+  })
+})
+
+describe('bdjobs adapter', () => {
+  const adapter = getAdapter('bdjobs')
+  const parsed = adapter.parse(bdjobsFixture as unknown[], source('bdjobs', 'category:8', 'B'))
+
+  it('links to the public job detail page', () => {
+    for (const job of parsed) {
+      expect(job.applyUrl).toBe(`https://jobs.bdjobs.com/jobdetails/?id=${job.externalId}&ln=1`)
+    }
+  })
+
+  it('keeps every posting in Bangladesh and carries the workplace hint', () => {
+    for (const job of parsed) {
+      expect(job.countryHint).toBe('BD')
+      expect(job.locationRaw).toBeTruthy()
+    }
+    expect(parsed.some((job) => job.workplaceRaw)).toBe(true)
+  })
+
+  it('reads the published salary as monthly taka', () => {
+    const withSalary = parsed.filter((job) => job.salary?.min || job.salary?.max)
+    expect(withSalary.length).toBeGreaterThan(0)
+    for (const job of withSalary) {
+      expect(job.salary?.currency).toBe('BDT')
+      expect(job.salary?.period).toBe('MONTH')
+    }
+  })
+
+  it('builds a query string only for a recognised identifier', () => {
+    expect(queryFor('all')).toBe('')
+    expect(queryFor('category:8')).toBe('&category=8')
+    expect(queryFor('location:14')).toBe('&location=14')
+    expect(queryFor('nonsense')).toBe('')
+  })
+})
+
+describe('successfactors adapter', () => {
+  it('reads title, location, date and id out of the search table', () => {
+    const rows = parseSearchRows(successfactorsHtml.searchRows)
+    expect(rows.length).toBe(3)
+    expect(rows[0]).toMatchObject({
+      externalId: '1348821355',
+      title: 'Sales Development Representative - Swedish Speaker',
+      location: 'Amsterdam, NL, 102',
+      date: 'Sep 11, 2026',
+    })
+    for (const row of rows) {
+      expect(row.path).toMatch(/^\/job\/.+\/\d+\/$/)
+      expect(row.externalId).toMatch(/^\d+$/)
+    }
+  })
+
+  it('extracts the whole description span, which does not close before a div', () => {
+    const description = parseDescription(successfactorsHtml.jobPage)
+    expect(description).toBeTruthy()
+    expect((description as string).length).toBeGreaterThan(1000)
+    expect(description).toContain('Optimizely')
+    expect(description).not.toContain('jobGeoLocation')
+  })
+
+  it('returns null when the page carries no description', () => {
+    expect(parseDescription('<div class="job"><p>nothing here</p></div>')).toBeNull()
+  })
+})
+
+describe('wpjobs adapter', () => {
+  const adapter = getAdapter('wpjobs')
+  const wpSource = {
+    ...source('wpjobs', 'careers.pathao.com|awsm_job_openings', 'A'),
+    locationDefault: 'Dhaka, Bangladesh',
+    countryHint: 'BD',
+  }
+  const parsed = adapter.parse(wpjobsFixture as unknown[], wpSource)
+
+  it('uses the declared location and country, since WordPress posts carry neither', () => {
+    for (const job of parsed) {
+      expect(job.locationRaw).toBe('Dhaka, Bangladesh')
+      expect(job.countryHint).toBe('BD')
+      expect(job.applyUrl).toMatch(/^https:\/\//)
+    }
+  })
+
+  it('decodes entities in the rendered title', () => {
+    for (const job of parsed) expect(job.title).not.toMatch(/&#\d+;|&amp;/)
   })
 })

@@ -84,6 +84,10 @@ export const seniorityEnum = pgEnum('seniority', [
 
 export const roleTypeEnum = pgEnum('role_type', ['IC', 'MANAGER', 'UNKNOWN'])
 
+export const workplaceTypeEnum = pgEnum('workplace_type', ['REMOTE', 'HYBRID', 'ONSITE', 'UNKNOWN'])
+
+export const disciplineEnum = pgEnum('discipline', ['SOFTWARE', 'DATA', 'PRODUCT', 'DESIGN', 'IT', 'OTHER'])
+
 export const userJobStateEnum = pgEnum('user_job_state', ['SAVED', 'DISMISSED', 'APPLIED'])
 
 export const resumeKindEnum = pgEnum('resume_kind', ['MASTER', 'TAILORED'])
@@ -260,6 +264,9 @@ export const jobs = pgTable(
     locationRaw: text('location_raw'),
     remoteRegion: remoteRegionEnum('remote_region').notNull().default('UNKNOWN'),
     countries: text('countries').array().notNull().default(sql`'{}'::text[]`),
+    cities: text('cities').array().notNull().default(sql`'{}'::text[]`),
+    workplaceType: workplaceTypeEnum('workplace_type').notNull().default('UNKNOWN'),
+    discipline: disciplineEnum('discipline').notNull().default('OTHER'),
     employmentType: employmentTypeEnum('employment_type').notNull().default('UNKNOWN'),
     seniority: seniorityEnum('seniority').notNull().default('UNKNOWN'),
     roleType: roleTypeEnum('role_type').notNull().default('UNKNOWN'),
@@ -289,6 +296,8 @@ export const jobs = pgTable(
     index('jobs_company_idx').on(t.company),
     index('jobs_canonical_idx').on(t.canonicalJobId),
     index('jobs_facet_idx').on(t.isActive, t.remoteRegion, t.employmentType, t.seniority),
+    index('jobs_workplace_idx').on(t.isActive, t.workplaceType),
+    index('jobs_discipline_idx').on(t.isActive, t.discipline),
   ],
 )
 

@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { Check, ChevronDown, SlidersHorizontal, X } from 'lucide-react'
+import { FacetSection, type FacetOption } from '@/components/jobs/facet-section'
+import { locationTokenLabel } from '@/domain/jobs/location'
 import type { JobFacets, JobFilters as Filters } from '@/domain/jobs/search'
 import { cn } from '@/lib/cn'
-import { formatEmployment, formatSalary, formatSeniority, formatTier } from '@/lib/format'
+import { formatEmployment, formatSalary, formatSeniority, formatWorkplace } from '@/lib/format'
 import { filtersToParams, toggleValue } from '@/lib/jobs-query'
 
-type MultiKey = 'employmentType' | 'seniority' | 'tier' | 'skills'
+type MultiKey = 'locations' | 'workplaceType' | 'employmentType' | 'seniority' | 'skills'
+
+const WORKPLACE_ORDER = ['REMOTE', 'HYBRID', 'ONSITE']
 
 const POSTED_OPTIONS = [
   { label: 'Last 24 hours', value: 1 },
@@ -28,6 +32,18 @@ function href(filters: Filters, patch: Partial<Filters>): string {
 function activeFilters(filters: Filters) {
   const chips: { label: string; href: string }[] = []
 
+  for (const value of filters.locations ?? []) {
+    chips.push({
+      label: locationTokenLabel(value),
+      href: href(filters, { locations: toggleValue(filters.locations, value) }),
+    })
+  }
+  for (const value of filters.workplaceType ?? []) {
+    chips.push({
+      label: formatWorkplace(value),
+      href: href(filters, { workplaceType: toggleValue(filters.workplaceType, value) as Filters['workplaceType'] }),
+    })
+  }
   for (const value of filters.seniority ?? []) {
     chips.push({
       label: formatSeniority(value),
@@ -42,12 +58,6 @@ function activeFilters(filters: Filters) {
   }
   for (const value of filters.skills ?? []) {
     chips.push({ label: value, href: href(filters, { skills: toggleValue(filters.skills, value) }) })
-  }
-  for (const value of filters.tier ?? []) {
-    chips.push({
-      label: formatTier(value),
-      href: href(filters, { tier: toggleValue(filters.tier, value) as Filters['tier'] }),
-    })
   }
   if (filters.company) {
     chips.push({ label: filters.company, href: href(filters, { company: undefined }) })
@@ -101,16 +111,12 @@ function Section({
 
 function Option({
   label,
-  count,
   active,
   href: optionHref,
-  shape = 'square',
 }: {
   label: string
-  count?: number
   active: boolean
   href: string
-  shape?: 'square' | 'round'
 }) {
   return (
     <Link
@@ -124,46 +130,101 @@ function Option({
       <span
         aria-hidden
         className={cn(
-          'flex size-4 shrink-0 items-center justify-center border transition-colors',
-          shape === 'square' ? 'rounded-[5px]' : 'rounded-full',
+          'flex size-4 shrink-0 items-center justify-center rounded-full border transition-colors',
           active ? 'border-primary bg-primary text-primary-foreground' : 'border-input bg-card',
         )}
       >
         {active ? <Check className="size-3" strokeWidth={3} /> : null}
       </span>
       <span className="truncate">{label}</span>
-      {count !== undefined ? (
-        <span className="ml-auto shrink-0 text-xs tabular-nums text-muted-foreground/70">
-          {count.toLocaleString('en-US')}
-        </span>
-      ) : null}
     </Link>
   )
 }
 
+type MultiGroup = {
+  title: string
+  key: MultiKey
+  buckets: JobFacets['seniority']
+  format?: (value: string) => string
+  searchable?: boolean
+  searchPlaceholder?: string
+  visibleCount?: number
+}
+
+function toOptions(filters: Filters, group: MultiGroup): FacetOption[] {
+  const selected = (filters[group.key] as string[] | undefined) ?? []
+  return group.buckets
+    .filter((bucket) => bucket.count > 0 && bucket.value !== 'UNKNOWN')
+    .map((bucket) => ({
+      value: bucket.value,
+      label: group.format ? group.format(bucket.value) : bucket.value,
+      count: bucket.count,
+      active: selected.includes(bucket.value),
+      href: href(filters, { [group.key]: toggleValue(selected, bucket.value) } as Partial<Filters>),
+    }))
+}
+
 function Sections({ filters, facets }: { filters: Filters; facets: JobFacets }) {
-  const multiGroups: { title: string; key: MultiKey; buckets: JobFacets['seniority']; format?: (v: string) => string }[] =
-    [
-      { title: 'Seniority', key: 'seniority', buckets: facets.seniority, format: formatSeniority },
-      { title: 'Employment type', key: 'employmentType', buckets: facets.employmentType, format: formatEmployment },
-      { title: 'Skills', key: 'skills', buckets: facets.skills },
-      { title: 'Source', key: 'tier', buckets: facets.tier, format: formatTier },
-    ]
+  const workplaceBuckets = [...facets.workplaceType].sort(
+    (a, b) => WORKPLACE_ORDER.indexOf(a.value) - WORKPLACE_ORDER.indexOf(b.value),
+  )
+
+  const leadGroups: MultiGroup[] = [
+    {
+      title: 'Location',
+      key: 'locations',
+      buckets: facets.locations,
+      format: locationTokenLabel,
+      searchable: true,
+      searchPlaceholder: 'Search city or country',
+      visibleCount: 8,
+    },
+    { title: 'Workplace', key: 'workplaceType', buckets: workplaceBuckets, format: formatWorkplace },
+  ]
+
+  const multiGroups: MultiGroup[] = [
+    { title: 'Seniority', key: 'seniority', buckets: facets.seniority, format: formatSeniority },
+    { title: 'Employment type', key: 'employmentType', buckets: facets.employmentType, format: formatEmployment },
+    {
+      title: 'Skills',
+      key: 'skills',
+      buckets: facets.skills,
+      searchable: true,
+      searchPlaceholder: 'Search skills',
+      visibleCount: 8,
+    },
+  ]
+
+  const render = (group: MultiGroup, defaultOpen: boolean) => {
+    const selected = (filters[group.key] as string[] | undefined) ?? []
+    return (
+      <FacetSection
+        key={group.key}
+        title={group.title}
+        options={toOptions(filters, group)}
+        selectedCount={selected.length}
+        defaultOpen={defaultOpen || selected.length > 0}
+        searchable={group.searchable}
+        searchPlaceholder={group.searchPlaceholder}
+        visibleCount={group.visibleCount}
+      />
+    )
+  }
 
   return (
     <>
+      {leadGroups.map((group) => render(group, true))}
+
       <Section title="Date posted" defaultOpen={Boolean(filters.postedWithinDays)}>
         <Option
           label="Any time"
           active={!filters.postedWithinDays}
           href={href(filters, { postedWithinDays: undefined })}
-          shape="round"
         />
         {POSTED_OPTIONS.map((option) => (
           <Option
             key={option.value}
             label={option.label}
-            shape="round"
             active={filters.postedWithinDays === option.value}
             href={href(filters, {
               postedWithinDays: filters.postedWithinDays === option.value ? undefined : option.value,
@@ -175,7 +236,6 @@ function Sections({ filters, facets }: { filters: Filters; facets: JobFacets }) 
       <Section title="Salary floor" defaultOpen={Boolean(filters.salaryMinUsdMonth)}>
         <Option
           label="Any salary"
-          shape="round"
           active={!filters.salaryMinUsdMonth}
           href={href(filters, { salaryMinUsdMonth: undefined })}
         />
@@ -183,7 +243,6 @@ function Sections({ filters, facets }: { filters: Filters; facets: JobFacets }) 
           <Option
             key={option.value}
             label={`${option.label} / month`}
-            shape="round"
             active={filters.salaryMinUsdMonth === option.value}
             href={href(filters, {
               salaryMinUsdMonth: filters.salaryMinUsdMonth === option.value ? undefined : option.value,
@@ -195,57 +254,7 @@ function Sections({ filters, facets }: { filters: Filters; facets: JobFacets }) 
         </p>
       </Section>
 
-      {multiGroups.map((group) => {
-        const selected = (filters[group.key] as string[] | undefined) ?? []
-        const buckets = group.buckets.filter((bucket) => bucket.count > 0 && bucket.value !== 'UNKNOWN')
-        if (buckets.length === 0 && selected.length === 0) return null
-
-        const visible = buckets.slice(0, 6)
-        const rest = buckets.slice(6)
-
-        return (
-          <Section
-            key={group.key}
-            title={group.title}
-            count={selected.length}
-            defaultOpen={selected.length > 0 || group.key === 'seniority'}
-          >
-            {visible.map((bucket) => (
-              <Option
-                key={bucket.value}
-                label={group.format ? group.format(bucket.value) : bucket.value}
-                count={bucket.count}
-                active={selected.includes(bucket.value)}
-                href={href(filters, {
-                  [group.key]: toggleValue(selected, bucket.value),
-                } as Partial<Filters>)}
-              />
-            ))}
-
-            {rest.length > 0 ? (
-              <details className="group/more">
-                <summary className="cursor-pointer list-none rounded-lg px-2 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-accent/60 [&::-webkit-details-marker]:hidden">
-                  <span className="group-open/more:hidden">Show {rest.length} more</span>
-                  <span className="hidden group-open/more:inline">Show less</span>
-                </summary>
-                <div className="space-y-0.5 pt-0.5">
-                  {rest.map((bucket) => (
-                    <Option
-                      key={bucket.value}
-                      label={group.format ? group.format(bucket.value) : bucket.value}
-                      count={bucket.count}
-                      active={selected.includes(bucket.value)}
-                      href={href(filters, {
-                        [group.key]: toggleValue(selected, bucket.value),
-                      } as Partial<Filters>)}
-                    />
-                  ))}
-                </div>
-              </details>
-            ) : null}
-          </Section>
-        )
-      })}
+      {multiGroups.map((group) => render(group, false))}
     </>
   )
 }

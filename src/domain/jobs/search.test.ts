@@ -34,23 +34,31 @@ describe('cursors', () => {
 })
 
 describe('buildConditions', () => {
-  it('always restricts to active canonical rows', () => {
+  it('always restricts to active canonical rows in a technical discipline', () => {
     const query = toSql({ sort: 'recent' })
     expect(query.sql).toContain('j.is_active')
     expect(query.sql).toContain('j.canonical_job_id is null')
+    expect(query.sql).toMatch(/j\.discipline = any\(\$\d+::discipline\[\]\)/)
+    expect(query.params).toContainEqual(['SOFTWARE', 'DATA', 'PRODUCT', 'DESIGN', 'IT'])
+  })
+
+  it('keeps the discipline gate on every facet branch', () => {
+    for (const skip of ['region', 'seniority', 'skills', 'locations'] as const) {
+      expect(toSql({ sort: 'recent', region: ['APAC'] }, skip).sql).toContain('j.discipline')
+    }
   })
 
   it('parameterizes the full-text query', () => {
     const query = toSql({ sort: 'relevance', q: 'kubernetes terraform' })
-    expect(query.sql).toContain("websearch_to_tsquery('english', $1)")
+    expect(query.sql).toMatch(/websearch_to_tsquery\('english', \$\d+\)/)
     expect(query.params).toContain('kubernetes terraform')
   })
 
   it('uses array containment for skills and enum arrays for facets', () => {
     const query = toSql({ sort: 'recent', skills: ['Go'], region: ['APAC'], seniority: ['SENIOR'] })
-    expect(query.sql).toContain('j.skills @> $3::text[]')
-    expect(query.sql).toContain('j.remote_region = any($1::remote_region[])')
-    expect(query.sql).toContain('j.seniority = any($2::seniority[])')
+    expect(query.sql).toMatch(/j\.skills @> \$\d+::text\[\]/)
+    expect(query.sql).toMatch(/j\.remote_region = any\(\$\d+::remote_region\[\]\)/)
+    expect(query.sql).toMatch(/j\.seniority = any\(\$\d+::seniority\[\]\)/)
   })
 
   it('omits the skipped dimension so facet counts stay meaningful', () => {
@@ -61,7 +69,7 @@ describe('buildConditions', () => {
 
   it('builds a bounded recency window', () => {
     const query = toSql({ sort: 'recent', postedWithinDays: 14 })
-    expect(query.sql).toContain('make_interval(days => $1)')
+    expect(query.sql).toMatch(/make_interval\(days => \$\d+\)/)
     expect(query.params).toContain(14)
   })
 })

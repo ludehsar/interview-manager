@@ -4,8 +4,11 @@ import { sourceId } from './types'
 type SourceSeed = {
   kind: AdapterKind
   identifier: string
+  identityKey?: string
   label: string
   companyDomain?: string
+  locationDefault?: string
+  countryHint?: string
   tags?: string[]
   enabled?: boolean
 }
@@ -26,6 +29,9 @@ const TIER_BY_KIND: Record<AdapterKind, SourceDefinition['tier']> = {
   arbeitnow: 'C',
   jobicy: 'C',
   remoteok: 'C',
+  bdjobs: 'B',
+  wpjobs: 'A',
+  successfactors: 'A',
 }
 
 const INTERVAL_BY_TIER: Record<SourceDefinition['tier'], number> = {
@@ -50,6 +56,9 @@ const SEEDS: SourceSeed[] = [
   { kind: 'greenhouse', identifier: 'figma', label: 'Figma', companyDomain: 'figma.com' },
   { kind: 'greenhouse', identifier: 'affirm', label: 'Affirm', companyDomain: 'affirm.com' },
   { kind: 'greenhouse', identifier: 'asana', label: 'Asana', companyDomain: 'asana.com' },
+  { kind: 'greenhouse', identifier: 'agoda', label: 'Agoda', companyDomain: 'agoda.com' },
+  { kind: 'greenhouse', identifier: 'airbnb', label: 'Airbnb', companyDomain: 'airbnb.com' },
+  { kind: 'greenhouse', identifier: 'datadog', label: 'Datadog', companyDomain: 'datadoghq.com' },
 
   { kind: 'lever', identifier: 'palantir', label: 'Palantir', companyDomain: 'palantir.com' },
   { kind: 'lever', identifier: 'spotify', label: 'Spotify', companyDomain: 'spotify.com' },
@@ -69,9 +78,12 @@ const SEEDS: SourceSeed[] = [
   { kind: 'ashby', identifier: 'clerk', label: 'Clerk', companyDomain: 'clerk.com' },
   { kind: 'ashby', identifier: 'supabase', label: 'Supabase', companyDomain: 'supabase.com', tags: ['remote-first'] },
   { kind: 'ashby', identifier: 'neon', label: 'Neon', companyDomain: 'neon.tech', tags: ['remote-first'] },
+  { kind: 'ashby', identifier: 'snowflake', label: 'Snowflake', companyDomain: 'snowflake.com' },
 
   { kind: 'smartrecruiters', identifier: 'Ubisoft2', label: 'Ubisoft', companyDomain: 'ubisoft.com' },
   { kind: 'smartrecruiters', identifier: 'BoschGroup', label: 'Bosch', companyDomain: 'bosch.com' },
+  { kind: 'smartrecruiters', identifier: 'canva', label: 'Canva', companyDomain: 'canva.com' },
+  { kind: 'smartrecruiters', identifier: 'grab', label: 'Grab', companyDomain: 'grab.com' },
 
   {
     kind: 'workable',
@@ -82,7 +94,6 @@ const SEEDS: SourceSeed[] = [
   },
   { kind: 'workable', identifier: 'vivasoft', label: 'Vivasoft', companyDomain: 'vivasoftltd.com', tags: ['bangladesh'] },
   { kind: 'workable', identifier: 'welldev', label: 'WellDev', companyDomain: 'welldev.io', tags: ['bangladesh'] },
-  { kind: 'workable', identifier: 'selise', label: 'SELISE', companyDomain: 'selise.ch', tags: ['bangladesh'] },
   {
     kind: 'workable',
     identifier: 'enosis-solutions',
@@ -109,12 +120,20 @@ const SEEDS: SourceSeed[] = [
   { kind: 'workday', identifier: 'hpe|wd5|Jobsathpe', label: 'HPE', companyDomain: 'hpe.com' },
   { kind: 'workday', identifier: 'paypal|wd1|jobs', label: 'PayPal', companyDomain: 'paypal.com' },
   { kind: 'workday', identifier: 'workday|wd5|Workday', label: 'Workday', companyDomain: 'workday.com' },
+  { kind: 'workday', identifier: 'sec|wd3|Samsung_Careers', label: 'Samsung', companyDomain: 'samsung.com' },
 
   {
     kind: 'eightfold',
     identifier: 'explore.jobs.netflix.net|netflix.com',
     label: 'Netflix',
     companyDomain: 'netflix.com',
+  },
+
+  {
+    kind: 'successfactors',
+    identifier: 'careers.optimizely.com',
+    label: 'Optimizely',
+    companyDomain: 'optimizely.com',
   },
 
   { kind: 'remotive', identifier: 'all', label: 'Remotive' },
@@ -127,6 +146,50 @@ const SEEDS: SourceSeed[] = [
   { kind: 'arbeitnow', identifier: 'all', label: 'Arbeitnow' },
   { kind: 'jobicy', identifier: 'all', label: 'Jobicy' },
   { kind: 'remoteok', identifier: 'all', label: 'RemoteOK' },
+
+  {
+    kind: 'wpjobs',
+    identifier: 'careers.pathao.com|awsm_job_openings',
+    label: 'Pathao',
+    companyDomain: 'pathao.com',
+    locationDefault: 'Dhaka, Bangladesh',
+    countryHint: 'BD',
+    tags: ['bangladesh'],
+  },
+  {
+    kind: 'wpjobs',
+    identifier: 'selisegroup.com|job',
+    label: 'SELISE',
+    companyDomain: 'selisegroup.com',
+    locationDefault: 'Dhaka, Bangladesh',
+    countryHint: 'BD',
+    tags: ['bangladesh'],
+  },
+
+  {
+    kind: 'bdjobs',
+    identifier: 'category:8',
+    identityKey: 'bdjobs',
+    label: 'Bdjobs IT & Telecommunication',
+    tags: ['bangladesh'],
+  },
+  {
+    kind: 'bdjobs',
+    identifier: 'industry:11',
+    identityKey: 'bdjobs',
+    label: 'Bdjobs Information Technology industry',
+    tags: ['bangladesh'],
+  },
+  {
+    kind: 'bdjobs',
+    identifier: 'industry:12',
+    identityKey: 'bdjobs',
+    label: 'Bdjobs Telecommunication industry',
+    tags: ['bangladesh'],
+  },
+
+  { kind: 'smartrecruiters', identifier: 'shopup', label: 'ShopUp', companyDomain: 'shopup.com.bd', tags: ['bangladesh'] },
+  { kind: 'workable', identifier: 'dsinnovators', label: 'Dynamic Solution Innovators', companyDomain: 'dsinnovators.com', tags: ['bangladesh'] },
 ]
 
 
@@ -137,9 +200,12 @@ export const SOURCES: SourceDefinition[] = SEEDS.map((seed) => {
     kind: seed.kind,
     tier,
     identifier: seed.identifier,
+    identityKey: seed.identityKey,
     label: seed.label,
     companyOverride: tier === 'A' ? seed.label : undefined,
     companyDomain: seed.companyDomain,
+    locationDefault: seed.locationDefault,
+    countryHint: seed.countryHint,
     intervalMinutes: INTERVAL_BY_TIER[tier],
     tags: seed.tags,
     enabled: seed.enabled ?? true,

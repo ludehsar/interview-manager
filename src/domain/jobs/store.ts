@@ -18,6 +18,9 @@ export function toInsert(job: NormalizedJob, seenAt: Date): JobInsert {
     locationRaw: job.locationRaw,
     remoteRegion: job.remoteRegion,
     countries: job.countries,
+    cities: job.cities,
+    workplaceType: job.workplaceType,
+    discipline: job.discipline,
     employmentType: job.employmentType,
     seniority: job.seniority,
     roleType: job.roleType,
@@ -46,6 +49,9 @@ export const UPSERT_SET = {
   locationRaw: sql`coalesce(excluded.location_raw, ${jobs.locationRaw})`,
   remoteRegion: sql`excluded.remote_region`,
   countries: sql`excluded.countries`,
+  cities: sql`excluded.cities`,
+  workplaceType: sql`excluded.workplace_type`,
+  discipline: sql`excluded.discipline`,
   employmentType: sql`excluded.employment_type`,
   seniority: sql`excluded.seniority`,
   roleType: sql`excluded.role_type`,
@@ -77,13 +83,13 @@ export async function upsertJobs(rows: JobInsert[]): Promise<number> {
   return rows.length
 }
 
-export async function deactivateStale(sourceId: string, sweepStartedAt: Date): Promise<number> {
+export async function deactivateStale(sourceId: string, sweepStartedAt: Date): Promise<string[]> {
   const rows = await db()
     .update(jobs)
     .set({ isActive: false, closedAt: new Date() })
     .where(and(eq(jobs.sourceId, sourceId), eq(jobs.isActive, true), sql`${jobs.lastSeenAt} < ${sweepStartedAt}`))
     .returning({ id: jobs.id })
-  return rows.length
+  return rows.map((row) => row.id)
 }
 
 export async function collapseDuplicates(fingerprints: string[]): Promise<number> {
@@ -121,6 +127,20 @@ export async function releaseOrphanedDuplicates(fingerprints: string[]): Promise
     returning j.id
   `)
   return ((result.rows ?? result) as unknown as unknown[]).length
+}
+
+export async function collapsedJobIds(fingerprints: string[]): Promise<Set<string>> {
+  if (fingerprints.length === 0) return new Set()
+  const rows = await db()
+    .select({ id: jobs.id })
+    .from(jobs)
+    .where(
+      and(
+        sql`${jobs.fingerprint} = any(${sql.param(fingerprints)}::text[])`,
+        sql`${jobs.canonicalJobId} is not null`,
+      ),
+    )
+  return new Set(rows.map((row) => row.id))
 }
 
 export async function loadDescribedIds(sourceId: string): Promise<Set<string>> {

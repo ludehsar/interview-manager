@@ -11,6 +11,7 @@ tailors it per job against a knowledge graph of your own experience.
 | Web + BFF | Next.js 16 (App Router, React 19) on Vercel |
 | Auth | Clerk |
 | Data | Neon Postgres with pgvector and pg_trgm, via Drizzle |
+| Job search | OpenSearch (Docker locally), with Postgres full-text as fallback |
 | LLM | Anthropic API (Opus 5 / Sonnet 5 / Haiku 4.5) |
 | Async compute | AWS Lambda, SQS, EventBridge Scheduler, Step Functions |
 | CPU-heavy work | Rust Lambdas (Typst PDF rendering, local embeddings) |
@@ -23,24 +24,35 @@ Everything runs locally against Docker. No cloud account is needed to develop.
 ```bash
 pnpm install
 cp .env.example .env
-pnpm dev:up        # postgres with pgvector + localstack
+pnpm dev:up        # postgres with pgvector + localstack + opensearch
 pnpm db:migrate
-pnpm check:local   # verifies postgres, pgvector, s3 and both sqs queues
+pnpm search:init   # create the jobs index and load whatever is already in postgres
+pnpm check:local   # verifies postgres, pgvector, s3, both sqs queues and opensearch
 pnpm dev
 ```
 
 Job sources live in `src/adapters/`: applicant tracking systems (Greenhouse, Lever, Ashby,
-Workable, SmartRecruiters, Workday, Eightfold), Amazon's own search API, and curated remote
-boards (Remotive, We Work Remotely, Himalayas, Working Nomads, Jobicy, RemoteOK, Arbeitnow).
-`pnpm check:adapters` probes every one of them live and is the source of truth for whether a
-board still answers.
+Workable, SmartRecruiters, Workday, Eightfold), Amazon's own search API, curated remote
+boards (Remotive, We Work Remotely, Himalayas, Working Nomads, Jobicy, RemoteOK, Arbeitnow),
+`wpjobs` for companies whose careers page is WordPress with a job post type, and
+`successfactors` for SAP SuccessFactors career sites. Bangladeshi postings come from `bdjobs`,
+which reads Bdjobs.com's public job-search and job-detail APIs for the IT & Telecommunication
+category and the IT and Telecommunication industries, alongside Pathao and SELISE via `wpjobs`,
+Optimizely's Dhaka roles via `successfactors`, and the Bangladeshi employers that publish
+through Workable and SmartRecruiters. `pnpm check:adapters`
+probes every one of them live and is the source of truth for whether a board still answers.
 
-`docker-compose.yml` runs two containers:
+The board only shows technical roles. `src/domain/jobs/discipline.ts` classifies every posting
+from its title into SOFTWARE, DATA, PRODUCT, DESIGN, IT or OTHER, and the query layer excludes
+OTHER — so accounting, sales, HR, admin and non-software engineering never reach the list.
+
+`docker-compose.yml` runs three containers:
 
 | Service | Port | Contents |
 |---|---|---|
 | `postgres` | 5433 | Postgres 17 with pgvector and pg_trgm preinstalled |
 | `localstack` | 4566 | S3 bucket, `ingest` and `embed` queues each with a dead-letter queue, and the three SSM parameters |
+| `opensearch` | 9200 | Single-node cluster holding the `jobs` index that powers search, filters and facets |
 
 LocalStack resources are recreated from `docker/localstack/init/` on every start, so
 `pnpm dev:reset` gives a clean database and a clean set of AWS mocks.
@@ -73,7 +85,7 @@ fails in production.
 
 ```bash
 pnpm dev              # Next.js dev server
-pnpm dev:up           # start postgres + localstack
+pnpm dev:up           # start postgres + localstack + opensearch
 pnpm dev:down         # stop them
 pnpm dev:reset        # wipe volumes, restart, re-migrate
 pnpm check:local      # assert the local stack is reachable
@@ -83,6 +95,9 @@ pnpm test             # vitest
 pnpm build            # production build
 pnpm db:generate      # generate a Drizzle migration from schema.ts
 pnpm db:migrate       # apply migrations
+pnpm db:backfill      # recompute location, workplace and discipline on stored rows
+pnpm search:init      # create the opensearch index if missing and backfill it from postgres
+pnpm search:reindex   # drop and rebuild the index from postgres
 pnpm workers:build    # bundle Lambda handlers into dist/workers
 pnpm seed:sources     # load src/adapters/sources.ts into job_source_state
 pnpm check:adapters   # probe every job source live (--tier A, --kind lever, --save-fixtures)
@@ -96,6 +111,12 @@ cargo lambda build --arm64 --release    # build the Rust Lambdas
 source, runs the worker on each message, upserts jobs, deactivates postings the source
 stopped listing, and collapses lower-tier duplicates onto the tier A row. Re-running it
 is idempotent — row counts and `first_seen_at` do not move.
+
+Jobs are written to Postgres first and mirrored into OpenSearch by the same worker, so
+Postgres stays the system of record. `searchJobs`, `countJobs` and `loadFacets` use
+OpenSearch when `OPENSEARCH_URL` is set and fall back to the Postgres query on any error,
+which means the board keeps working with the container stopped. Unset `OPENSEARCH_URL` to
+run entirely on Postgres.
 
 `cargo lambda` needs Zig for cross-compilation (`brew install zig`).
 

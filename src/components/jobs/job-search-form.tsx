@@ -17,6 +17,10 @@ export function JobSearchForm({ filters }: { filters: JobFilters }) {
         />
       </div>
       {filters.region?.length ? <input type="hidden" name="region" value={filters.region.join(',')} /> : null}
+      {filters.locations?.length ? <input type="hidden" name="loc" value={filters.locations.join(',')} /> : null}
+      {filters.workplaceType?.length ? (
+        <input type="hidden" name="workplace" value={filters.workplaceType.join(',')} />
+      ) : null}
       {filters.skills?.length ? <input type="hidden" name="skills" value={filters.skills.join(',')} /> : null}
       <input type="hidden" name="sort" value="relevance" />
       <Button type="submit" className="rounded-full">

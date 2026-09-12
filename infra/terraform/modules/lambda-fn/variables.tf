@@ -17,14 +17,8 @@ variable "architecture" {
   default = "arm64"
 }
 
-variable "package_path" {
-  type    = string
-  default = null
-}
-
 variable "source_dir" {
-  type    = string
-  default = null
+  type = string
 }
 
 variable "memory_mb" {

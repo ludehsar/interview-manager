@@ -1,0 +1,71 @@
+[
+  {
+    "Jobid": "1532624",
+    "jobTitle": "HR Training & SOP Executive",
+    "companyName": "Shatarupa Weaving Mills Ltd.",
+    "publishDate": "2026-09-12T17:31:00Z",
+    "deadlineDB": "2026-10-12T00:00:00Z",
+    "location": "Old Dhaka",
+    "WorkPlace": "Office",
+    "JobType": "FullTime",
+    "jobContext": "<p>This is a junior-level execution role focused on training support and SOP follow-up. Candidates looking for managerial or strategic HR roles are discouraged from applying.</p><p><strong>Join us and grow your HR career with practical experience!</strong></p>",
+    "jobDescription": "Bachelor of Business Administration (BBA) in Human Resource Management\n",
+    "eduRec": "Bachelor of Business Administration (BBA) in Human Resource Management\n",
+    "experience": "2 to 5 years",
+    "Salary": {
+      "SalaryRange": null,
+      "MinSalary": 20000,
+      "MaxSalary": 25000,
+      "SalaryType": null,
+      "IsNegotiable": false,
+      "HideSalary": false
+    },
+    "OnlineJob": true
+  },
+  {
+    "Jobid": "1532622",
+    "jobTitle": "Manager - Factory Execution & Production Control",
+    "companyName": "Shatarupa Weaving Mills Ltd.",
+    "publishDate": "2026-09-12T17:10:00Z",
+    "deadlineDB": "2026-10-12T00:00:00Z",
+    "location": "Tongi",
+    "WorkPlace": "Office",
+    "JobType": "FullTime",
+    "jobContext": "<p><strong>Take full ownership of weaving factory execution. Reduce loom downtime &amp; improve production efficiency. Lead mechanics, electricians &amp; floor teams. Direct impact on output, cost &amp; quality. Work under pressure with strong accountability.</strong></p>",
+    "jobDescription": "Bachelor of Science (BSc) in Textile Engineering\nMaster of Business Administration (MBA)\n",
+    "eduRec": "Bachelor of Science (BSc) in Textile Engineering\nMaster of Business Administration (MBA)\n",
+    "experience": "8 to 12 years",
+    "Salary": {
+      "SalaryRange": null,
+      "MinSalary": 0,
+      "MaxSalary": 0,
+      "SalaryType": null,
+      "IsNegotiable": false,
+      "HideSalary": false
+    },
+    "OnlineJob": true
+  },
+  {
+    "Jobid": "1532621",
+    "jobTitle": "MIS Executive / Junior BI Analyst",
+    "companyName": "Shatarupa Weaving Mills Ltd.",
+    "publishDate": "2026-09-12T17:06:00Z",
+    "deadlineDB": "2026-10-12T00:00:00Z",
+    "location": "Old Dhaka",
+    "WorkPlace": "Office",
+    "JobType": "FullTime",
+    "jobContext": "<p><strong>\"At Shatarupa Group, we turn data into decisions. This role offers the opportunity to work with real business data, build dashboards, and contribute to management decisions while growing your career in MIS and Business Intelligence.\"</strong></p>",
+    "jobDescription": "Bachelor of Science (BSc) in Management Information System, Computer Science & Engineering\n",
+    "eduRec": "Bachelor of Science (BSc) in Management Information System, Computer Science & Engineering\n",
+    "experience": "1 to 5 years",
+    "Salary": {
+      "SalaryRange": null,
+      "MinSalary": 0,
+      "MaxSalary": 0,
+      "SalaryType": null,
+      "IsNegotiable": false,
+      "HideSalary": false
+    },
+    "OnlineJob": true
+  }
+]

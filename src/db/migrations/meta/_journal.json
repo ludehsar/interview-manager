@@ -29,6 +29,20 @@
       "when": 1789222735266,
       "tag": "0003_jobs_sort_at",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789300000000,
+      "tag": "0004_location_workplace",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789400000000,
+      "tag": "0005_job_discipline",
+      "breakpoints": true
     }
   ]
 }

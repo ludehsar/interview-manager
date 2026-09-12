@@ -1,10 +1,13 @@
 import { z } from 'zod'
+import { decodeLocationToken, encodeLocationToken } from '@/domain/jobs/location'
 import type { JobFilters, JobSort } from '@/domain/jobs/search'
 
 const REGIONS = ['WORLDWIDE', 'APAC', 'BANGLADESH', 'REGION_LOCKED', 'UNKNOWN'] as const
 const EMPLOYMENT_TYPES = ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'FREELANCE', 'INTERNSHIP', 'UNKNOWN'] as const
 const SENIORITIES = ['INTERN', 'JUNIOR', 'MID', 'SENIOR', 'STAFF', 'PRINCIPAL', 'LEAD', 'UNKNOWN'] as const
 const TIERS = ['A', 'B', 'C'] as const
+const WORKPLACE_TYPES = ['REMOTE', 'HYBRID', 'ONSITE', 'UNKNOWN'] as const
+const MAX_LOCATIONS = 12
 
 export type SearchParams = Record<string, string | string[] | undefined>
 
@@ -29,6 +32,15 @@ export function parseJobFilters(params: SearchParams): JobFilters {
   const seniority = filterTo(list(params.seniority), SENIORITIES)
   const tier = filterTo(list(params.tier), TIERS)
   const skills = list(params.skills).slice(0, 10)
+  const workplaceType = filterTo(list(params.workplace), WORKPLACE_TYPES)
+  const locations = [
+    ...new Set(
+      list(params.loc)
+        .map((entry) => decodeLocationToken(entry))
+        .filter((entry) => entry !== null)
+        .map((entry) => encodeLocationToken(entry)),
+    ),
+  ].slice(0, MAX_LOCATIONS)
   const company = typeof params.company === 'string' ? params.company.trim().slice(0, 100) : undefined
   const salary = numberParam.safeParse(params.salary)
   const days = numberParam.safeParse(params.days)
@@ -37,6 +49,8 @@ export function parseJobFilters(params: SearchParams): JobFilters {
     q: q || undefined,
     sort,
     region: region.length ? region : undefined,
+    locations: locations.length ? locations : undefined,
+    workplaceType: workplaceType.length ? workplaceType : undefined,
     employmentType: employmentType.length ? employmentType : undefined,
     seniority: seniority.length ? seniority : undefined,
     tier: tier.length ? tier : undefined,
@@ -52,6 +66,8 @@ export function filtersToParams(filters: JobFilters, extra?: Record<string, stri
   if (filters.q) params.set('q', filters.q)
   if (filters.sort === 'relevance') params.set('sort', 'relevance')
   if (filters.region?.length) params.set('region', filters.region.join(','))
+  if (filters.locations?.length) params.set('loc', filters.locations.join(','))
+  if (filters.workplaceType?.length) params.set('workplace', filters.workplaceType.join(','))
   if (filters.employmentType?.length) params.set('type', filters.employmentType.join(','))
   if (filters.seniority?.length) params.set('seniority', filters.seniority.join(','))
   if (filters.tier?.length) params.set('tier', filters.tier.join(','))

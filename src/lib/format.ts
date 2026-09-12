@@ -26,6 +26,13 @@ const EMPLOYMENT_LABELS: Record<string, string> = {
   UNKNOWN: 'Unspecified',
 }
 
+const WORKPLACE_LABELS: Record<string, string> = {
+  REMOTE: 'Remote',
+  HYBRID: 'Hybrid',
+  ONSITE: 'Onsite',
+  UNKNOWN: 'Unspecified',
+}
+
 const TIER_LABELS: Record<string, string> = {
   A: 'Direct from employer',
   B: 'Curated board',
@@ -42,6 +49,10 @@ export function formatSeniority(value: string): string {
 
 export function formatEmployment(value: string): string {
   return EMPLOYMENT_LABELS[value] ?? value
+}
+
+export function formatWorkplace(value: string): string {
+  return WORKPLACE_LABELS[value] ?? value
 }
 
 export function formatTier(value: string): string {

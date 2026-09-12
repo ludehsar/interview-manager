@@ -1,5 +1,7 @@
 import { companyDomainFromName, companyDomainFromText, inferCompanyDomain, normalizeDomain } from './company'
 import { contentHash, dedupeFingerprint, jobId, normalizeCompany } from './fingerprint'
+import { classifyDiscipline } from './discipline'
+import { parseLocation, regionFromCountries } from './location'
 import { toMonthlyUsd } from './salary-usd'
 import { extractSkills } from './skills'
 import { excerpt, htmlToText, truncateDescription } from './text'
@@ -55,6 +57,7 @@ export function normalizeJob(
     id: string
     kind: string
     identifier: string
+    identityKey?: string
     tier: SourceTier
     companyOverride?: string
     companyDomain?: string
@@ -65,9 +68,15 @@ export function normalizeJob(
   const description = truncateDescription(parsed.descriptionText ?? htmlToText(parsed.descriptionHtml))
   const salary = toMonthlyUsd(parsed.salary)
   const skills = extractSkills(parsed.title, description)
+  const location = parseLocation(parsed.locationRaw, {
+    workplaceHint: parsed.workplaceRaw,
+    seedCountries: region.countries,
+    fallbackCountry: parsed.countryHint,
+  })
+  const remoteRegion = region.region === 'UNKNOWN' ? regionFromCountries(location.countries) : region.region
 
   return {
-    id: jobId(source.kind, source.identifier, parsed.externalId),
+    id: jobId(source.kind, source.identityKey ?? source.identifier, parsed.externalId),
     sourceId: source.id,
     sourceKind: source.kind,
     tier: source.tier,
@@ -81,8 +90,11 @@ export function normalizeJob(
       companyDomainFromName(company) ??
       companyDomainFromText(company, description, normalizeCompany),
     locationRaw: parsed.locationRaw ?? null,
-    remoteRegion: region.region,
-    countries: region.countries,
+    remoteRegion,
+    countries: location.countries,
+    cities: location.cities,
+    workplaceType: location.workplaceType,
+    discipline: classifyDiscipline(parsed.title, skills),
     employmentType: inferEmploymentType(`${parsed.title} ${description ?? ''}`, parsed.employmentType),
     seniority: inferSeniority(parsed.title),
     roleType: inferRoleType(parsed.title),

@@ -17,15 +17,21 @@ export type AdapterKind =
   | 'arbeitnow'
   | 'jobicy'
   | 'remoteok'
+  | 'bdjobs'
+  | 'wpjobs'
+  | 'successfactors'
 
 export type SourceDefinition = {
   id: string
   kind: AdapterKind
   tier: SourceTier
   identifier: string
+  identityKey?: string
   label: string
   companyOverride?: string
   companyDomain?: string
+  locationDefault?: string
+  countryHint?: string
   intervalMinutes: number
   tags?: string[]
   enabled: boolean

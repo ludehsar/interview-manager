@@ -16,6 +16,11 @@ const serverSchema = z.object({
   REVALIDATE_SECRET: z.string().optional(),
   ADAPTER_USER_AGENT: z.string().default('interview-manager/1.0 (+https://github.com)'),
   INGEST_MAX_PAGES: z.coerce.number().int().positive().default(5),
+  OPENSEARCH_URL: z.string().optional(),
+  OPENSEARCH_INDEX: z.string().default('jobs'),
+  OPENSEARCH_USERNAME: z.string().optional(),
+  OPENSEARCH_PASSWORD: z.string().optional(),
+  OPENSEARCH_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
   LOCATION_LLM_FALLBACK: z
     .enum(['true', 'false'])
     .default('false')

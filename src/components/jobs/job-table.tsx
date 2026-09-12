@@ -5,7 +5,7 @@ import { RelativeTime } from '@/components/jobs/relative-time'
 import { regionTone, stateTone, StatusPill } from '@/components/jobs/status-pill'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { JobState } from '@/lib/actions/jobs'
-import { formatEmployment, formatRegion, formatSalary, formatSeniority } from '@/lib/format'
+import { formatEmployment, formatRegion, formatSalary, formatSeniority, formatWorkplace } from '@/lib/format'
 
 export type JobTableRow = {
   id: string
@@ -14,6 +14,7 @@ export type JobTableRow = {
   companyDomain?: string | null
   locationRaw: string | null
   remoteRegion: string
+  workplaceType?: string
   employmentType?: string
   seniority?: string
   salaryMinUsdMonth?: number | null
@@ -90,7 +91,12 @@ export function JobTable({
                   <RelativeTime date={job.postedAt} />
                 </TableCell>
                 <TableCell className="hidden whitespace-nowrap text-muted-foreground 2xl:table-cell">
-                  {job.employmentType && job.employmentType !== 'UNKNOWN' ? formatEmployment(job.employmentType) : '—'}
+                  {[
+                    job.employmentType && job.employmentType !== 'UNKNOWN' ? formatEmployment(job.employmentType) : null,
+                    job.workplaceType && job.workplaceType !== 'UNKNOWN' ? formatWorkplace(job.workplaceType) : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ') || '—'}
                 </TableCell>
                 <TableCell>
                   {showStatus ? (

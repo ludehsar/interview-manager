@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { inferEmploymentType, inferRoleType, inferSeniority, normalizeJob } from './normalize'
 import { excerpt, htmlToText, truncateDescription } from './text'
+import type { ParsedJob } from './types'
 
 const source = { id: 'greenhouse:acme', kind: 'greenhouse', identifier: 'acme', tier: 'A' as const }
 
@@ -108,5 +109,36 @@ describe('htmlToText with escaped markup', () => {
 
   it('leaves plain text with ampersands alone', () => {
     expect(htmlToText('<p>R&amp;D team</p>')).toBe('R&D team')
+  })
+})
+
+describe('source identity', () => {
+  const parsed: ParsedJob = {
+    externalId: '42',
+    title: 'Software Engineer',
+    company: 'Acme',
+    applyUrl: 'https://example.com/42',
+  }
+  const region = { region: 'BANGLADESH' as const, countries: ['BD'] }
+
+  it('hashes the identity key so overlapping feeds resolve to one row', () => {
+    const fromCategory = normalizeJob(
+      parsed,
+      { id: 'bdjobs:category:8', kind: 'bdjobs', identifier: 'category:8', identityKey: 'bdjobs', tier: 'B' },
+      region,
+    )
+    const fromIndustry = normalizeJob(
+      parsed,
+      { id: 'bdjobs:industry:11', kind: 'bdjobs', identifier: 'industry:11', identityKey: 'bdjobs', tier: 'B' },
+      region,
+    )
+    expect(fromCategory.id).toBe(fromIndustry.id)
+    expect(fromCategory.sourceId).not.toBe(fromIndustry.sourceId)
+  })
+
+  it('falls back to the identifier when no identity key is declared', () => {
+    const a = normalizeJob(parsed, { id: 'x:one', kind: 'x', identifier: 'one', tier: 'A' }, region)
+    const b = normalizeJob(parsed, { id: 'x:two', kind: 'x', identifier: 'two', tier: 'A' }, region)
+    expect(a.id).not.toBe(b.id)
   })
 })

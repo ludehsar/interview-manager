@@ -10,12 +10,16 @@ import { classifyRegion } from '@/domain/jobs/region-classifier'
 import { markFailure, markSuccess } from '@/domain/jobs/source-state'
 import {
   collapseDuplicates,
+  collapsedJobIds,
   deactivateStale,
   loadDescribedIds,
   releaseOrphanedDuplicates,
   toInsert,
   upsertJobs,
 } from '@/domain/jobs/store'
+import type { JobInsert } from '@/domain/jobs/types'
+import { isSearchEnabled } from '@/search/client'
+import { deleteJobDocuments, ensureJobsIndex, indexJobRows } from '@/search/jobs-index'
 import { ingestMessageSchema } from './messages'
 
 export type SweepOutcome = {
@@ -25,6 +29,7 @@ export type SweepOutcome = {
   deactivated: number
   collapsed: number
   released: number
+  indexed: number
 }
 
 class SourceFailure extends Error {}
@@ -58,16 +63,40 @@ export async function sweepSource(source: SourceDefinition, maxPages: number): P
   }
 
   const upserted = await upsertJobs(rows)
-  const deactivated = rows.length > 0 ? await deactivateStale(source.id, sweepStartedAt) : 0
+  const deactivated = rows.length > 0 ? await deactivateStale(source.id, sweepStartedAt) : []
   const fingerprints = [...new Set(rows.map((row) => row.fingerprint))]
   const collapsed = await collapseDuplicates(fingerprints)
   const released = await releaseOrphanedDuplicates(fingerprints)
+
+  const indexed = await indexSweep(rows, deactivated)
 
   await markSuccess(source.id, upserted)
   await enqueueEmbeddings(rows.map((row) => row.id))
   await revalidate(rows.map((row) => row.id))
 
-  return { sourceId: source.id, fetched: parsed.length, upserted, deactivated, collapsed, released }
+  return {
+    sourceId: source.id,
+    fetched: parsed.length,
+    upserted,
+    deactivated: deactivated.length,
+    collapsed,
+    released,
+    indexed,
+  }
+}
+
+async function indexSweep(rows: JobInsert[], deactivated: string[]): Promise<number> {
+  if (!isSearchEnabled() || (rows.length === 0 && deactivated.length === 0)) return 0
+  try {
+    await ensureJobsIndex()
+    const collapsed = await collapsedJobIds(rows.map((row) => row.fingerprint))
+    const stale = new Set([...deactivated, ...rows.filter((row) => collapsed.has(row.id as string)).map((row) => row.id as string)])
+    await deleteJobDocuments([...stale])
+    return await indexJobRows(rows.filter((row) => !stale.has(row.id as string)))
+  } catch (error) {
+    console.error('opensearch index failed:', error)
+    return 0
+  }
 }
 
 async function enqueueEmbeddings(jobIds: string[]): Promise<void> {
@@ -123,7 +152,7 @@ export const handler = async (event: SQSEvent): Promise<SQSBatchResponse> => {
     try {
       const outcome = await processRecord(record)
       console.log(
-        `${outcome.sourceId}: fetched=${outcome.fetched} upserted=${outcome.upserted} deactivated=${outcome.deactivated} collapsed=${outcome.collapsed}`,
+        `${outcome.sourceId}: fetched=${outcome.fetched} upserted=${outcome.upserted} deactivated=${outcome.deactivated} collapsed=${outcome.collapsed} indexed=${outcome.indexed}`,
       )
     } catch (error) {
       const sourceId = safeSourceId(record.body)
