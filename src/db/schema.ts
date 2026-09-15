@@ -94,6 +94,14 @@ export const resumeKindEnum = pgEnum('resume_kind', ['MASTER', 'TAILORED'])
 
 export const runStatusEnum = pgEnum('run_status', ['RUNNING', 'SUCCEEDED', 'FAILED'])
 
+export const uploadStatusEnum = pgEnum('upload_status', [
+  'PENDING',
+  'EXTRACTING',
+  'EXTRACTED',
+  'ACCEPTED',
+  'FAILED',
+])
+
 export const users = pgTable(
   'users',
   {
@@ -366,6 +374,7 @@ export const resumes = pgTable(
     content: jsonb('content').$type<Record<string, unknown>>().notNull(),
     screenerReport: jsonb('screener_report').$type<Record<string, unknown>>(),
     screenerScore: integer('screener_score'),
+    atsReport: jsonb('ats_report').$type<Record<string, unknown>>(),
     atsScore: integer('ats_score'),
     typstKey: text('typst_key'),
     pdfKey: text('pdf_key'),
@@ -396,9 +405,31 @@ export const resumeRuns = pgTable(
     status: runStatusEnum('status').notNull().default('RUNNING'),
     error: text('error'),
     startedAt: timestamp('started_at', { withTimezone: true }).notNull().defaultNow(),
+    metrics: jsonb('metrics').$type<Record<string, unknown>>().notNull().default(sql`'{}'::jsonb`),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index('resume_runs_user_idx').on(t.userId, t.startedAt)],
+)
+
+export const profileUploads = pgTable(
+  'profile_uploads',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    fileName: text('file_name').notNull(),
+    contentType: text('content_type').notNull(),
+    bytes: integer('bytes'),
+    s3Key: text('s3_key').notNull(),
+    status: uploadStatusEnum('status').notNull().default('PENDING'),
+    error: text('error'),
+    extracted: jsonb('extracted').$type<Record<string, unknown> | null>(),
+    entryIds: text('entry_ids').array().notNull().default(sql`'{}'::text[]`),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('profile_uploads_user_idx').on(t.userId, t.createdAt)],
 )
 
 export const llmCalls = pgTable(

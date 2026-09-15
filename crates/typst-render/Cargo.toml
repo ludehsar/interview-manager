@@ -4,9 +4,17 @@ edition.workspace = true
 version.workspace = true
 license.workspace = true
 
+[lib]
+name = "typst_render_lambda"
+path = "src/lib.rs"
+
 [[bin]]
 name = "typst-render"
-path = "src/main.rs"
+path = "src/bin/typst-render.rs"
+
+[[bin]]
+name = "typst-cli"
+path = "src/bin/typst-cli.rs"
 
 [dependencies]
 anyhow.workspace = true
@@ -18,3 +26,8 @@ tracing.workspace = true
 tracing-subscriber.workspace = true
 aws-config.workspace = true
 aws-sdk-s3.workspace = true
+typst = "0.15"
+typst-pdf = "0.15"
+typst-utils = "0.15"
+typst-layout = "0.15"
+comemo = "0.4"

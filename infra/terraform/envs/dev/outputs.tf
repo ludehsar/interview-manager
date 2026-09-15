@@ -29,3 +29,32 @@ output "ingest_dispatch_function" {
 output "ingest_worker_function" {
   value = module.ingest.worker_function_name
 }
+
+output "resume_state_machine_arn" {
+  value = module.resume_pipeline.state_machine_arn
+}
+
+output "render_function_arn" {
+  value = module.resume_pipeline.render_function_arn
+}
+
+output "embed_function_arn" {
+  value = module.ingest.embed_function_arn
+}
+
+output "vercel_runtime_user" {
+  value = aws_iam_user.vercel_runtime.name
+}
+
+output "opensearch_endpoint" {
+  value = var.opensearch_enabled ? module.search[0].endpoint : null
+}
+
+output "opensearch_username" {
+  value = var.opensearch_enabled ? module.search[0].master_username : null
+}
+
+output "opensearch_password" {
+  value     = var.opensearch_enabled ? module.search[0].master_password : null
+  sensitive = true
+}

@@ -2,6 +2,7 @@ import { SOURCES } from '@/adapters/sources'
 import { sendBatch } from '@/aws/sqs'
 import { dueSources, markRunStart, seedSourceState } from '@/domain/jobs/source-state'
 import { newId } from '@/lib/ids'
+import { ensureSecrets } from '../secrets'
 import { dispatchEventSchema, type DispatchEvent } from './messages'
 
 export type DispatchResult = {
@@ -41,5 +42,6 @@ export async function dispatch(event: DispatchEvent = {}): Promise<DispatchResul
 }
 
 export const handler = async (event: unknown = {}): Promise<DispatchResult> => {
+  await ensureSecrets()
   return dispatch(dispatchEventSchema.parse(event ?? {}))
 }

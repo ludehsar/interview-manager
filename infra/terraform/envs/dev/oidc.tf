@@ -104,17 +104,8 @@ resource "aws_iam_role" "vercel_runtime" {
 }
 
 resource "aws_iam_role_policy" "vercel_runtime" {
-  count = var.vercel_team_slug == "" ? 0 : 1
-  name  = "${local.name}-vercel-runtime"
-  role  = aws_iam_role.vercel_runtime[0].id
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"]
-        Resource = "${module.storage.arn}/*"
-      }
-    ]
-  })
+  count  = var.vercel_team_slug == "" ? 0 : 1
+  name   = "${local.name}-vercel-runtime"
+  role   = aws_iam_role.vercel_runtime[0].id
+  policy = data.aws_iam_policy_document.vercel_runtime.json
 }

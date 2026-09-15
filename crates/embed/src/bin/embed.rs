@@ -1,7 +1,8 @@
+use embed_lambda::{Embedder, DIMENSIONS};
 use lambda_runtime::{run, service_fn, Error, LambdaEvent};
 use serde::{Deserialize, Serialize};
-
-pub const DIMENSIONS: usize = 384;
+use std::sync::Mutex;
+use tokio::sync::OnceCell;
 
 #[derive(Debug, Deserialize)]
 struct EmbedRequest {
@@ -14,16 +15,28 @@ struct EmbedResponse {
     vectors: Vec<Vec<f32>>,
 }
 
+static EMBEDDER: OnceCell<Mutex<Embedder>> = OnceCell::const_new();
+
+async fn embedder() -> Result<&'static Mutex<Embedder>, Error> {
+    EMBEDDER
+        .get_or_try_init(|| async { Embedder::new().map(Mutex::new) })
+        .await
+        .map_err(Error::from)
+}
+
 async fn handler(event: LambdaEvent<EmbedRequest>) -> Result<EmbedResponse, Error> {
-    let vectors = embed(&event.payload.texts)?;
+    let cell = embedder().await?;
+    let vectors = {
+        let mut model = cell
+            .lock()
+            .map_err(|_| Error::from("embedder lock poisoned"))?;
+        model.embed_batch(&event.payload.texts)?
+    };
+
     Ok(EmbedResponse {
         dimensions: DIMENSIONS,
         vectors,
     })
-}
-
-fn embed(_texts: &[String]) -> Result<Vec<Vec<f32>>, Error> {
-    Err(Error::from("local embedding model is wired up in phase 1"))
 }
 
 #[tokio::main]

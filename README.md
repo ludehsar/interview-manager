@@ -104,6 +104,14 @@ pnpm check:adapters   # probe every job source live (--tier A, --kind lever, --s
 pnpm sweep            # dispatch + drain the ingest queue against LocalStack
 pnpm ingest:dispatch  # enqueue due sources only
 pnpm ingest:drain     # run the worker against whatever is queued
+pnpm assets:fetch     # pull the embedding weights and Inter faces (pinned sha256)
+pnpm crates:local     # build embed-cli and typst-cli for local use
+pnpm crates:build     # build the Rust Lambda artifacts in an amazonlinux:2023 container
+pnpm embed:drain      # drain the embed queue with the local embedder
+pnpm check:retrieval  # seed a profile, embed it, assert hybrid retrieval and the evidence pack
+pnpm check:render     # render a resume through typst-cli and score the PDF parse-back
+pnpm probe:ai         # one call per model tier (pnpm probe:ai fast reason)
+pnpm resume:build     # run the master-resume pipeline locally (--user usr_… --from draft|screen|render --dry)
 cargo lambda build --arm64 --release    # build the Rust Lambdas
 ```
 

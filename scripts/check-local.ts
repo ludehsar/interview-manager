@@ -1,3 +1,5 @@
+import { spawn } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { config } from 'dotenv'
 import { sql } from 'drizzle-orm'
 import { HeadBucketCommand, ListBucketsCommand } from '@aws-sdk/client-s3'
@@ -75,8 +77,48 @@ async function checkSearch(): Promise<Check[]> {
   ]
 }
 
+async function checkRust(): Promise<Check[]> {
+  const run = (command: string, args: string[]) =>
+    new Promise<string | null>((resolve) => {
+      const child = spawn(command, args)
+      let out = ''
+      child.stdout.on('data', (chunk) => (out += String(chunk)))
+      child.on('error', () => resolve(null))
+      child.on('close', (code) => resolve(code === 0 ? out.trim() : null))
+    })
+
+  const which = await run('which', ['cargo'])
+  if (!which) return [{ name: 'cargo', detail: 'not installed, install rustup from https://rustup.rs' }]
+
+  const homebrew = which.includes('/opt/homebrew/') || which.includes('/usr/local/Cellar/')
+  const version = await run('cargo', ['--version'])
+  const docker = await run('docker', ['version', '--format', '{{.Server.Arch}}'])
+  const cli = existsSync('target/release/embed-cli')
+  const model = existsSync('crates/embed/models/bge-small-en-v1.5/model_quantized.onnx')
+
+  return [
+    {
+      name: 'cargo',
+      detail: homebrew
+        ? `${version ?? 'unknown'} at ${which} (Homebrew; fine for local builds and tests, but rustup is needed for any host-toolchain cross-compile)`
+        : `${version ?? 'unknown'} at ${which}`,
+    },
+    { name: 'embed model', detail: model ? 'weights present' : 'missing, run: pnpm assets:fetch' },
+    { name: 'embed-cli', detail: cli ? 'built' : 'not built, run: pnpm crates:local' },
+    {
+      name: 'docker arm64',
+      detail: docker === 'arm64' ? 'ready for pnpm crates:build' : `server arch ${docker ?? 'unavailable'}`,
+    },
+  ]
+}
+
 async function main() {
-  const checks = [...(await checkDatabase()), ...(await checkAws()), ...(await checkSearch())]
+  const checks = [
+    ...(await checkDatabase()),
+    ...(await checkAws()),
+    ...(await checkSearch()),
+    ...(await checkRust()),
+  ]
   for (const check of checks) {
     console.log(`ok  ${check.name.padEnd(16)} ${check.detail}`)
   }

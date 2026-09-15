@@ -72,19 +72,53 @@ resource "aws_budgets_budget" "monthly" {
   }
 }
 
+module "search" {
+  count  = var.opensearch_enabled ? 1 : 0
+  source = "../../modules/search"
+
+  name_prefix    = local.name
+  ssm_prefix     = "/${local.name}"
+  instance_type  = var.opensearch_instance_type
+  volume_size_gb = var.opensearch_volume_size_gb
+  tags           = local.tags
+}
+
 module "ingest" {
   source = "../../modules/ingest"
 
-  name_prefix = local.name
-  dist_dir    = "${path.root}/../../../dist/workers"
-  ssm_prefix  = "/${local.name}"
-  tags        = local.tags
+  name_prefix       = local.name
+  dist_dir          = "${path.root}/../../../../dist/workers"
+  ssm_prefix        = "/${local.name}"
+  schedules_enabled = var.schedules_enabled
+  tags              = local.tags
+
+  lambda_dist_dir = "${path.root}/../../../../target/lambda"
+
+  lambda_environment = merge(
+    {
+      APP_URL               = var.app_url
+      S3_BUCKET             = module.storage.bucket
+      INGEST_MAX_PAGES      = tostring(var.ingest_max_pages)
+      LOCATION_LLM_FALLBACK = tostring(var.location_llm_fallback)
+      SSM_PREFIX            = "/${local.name}"
+    },
+    var.opensearch_enabled ? { OPENSEARCH_INDEX = module.search[0].index_name } : {},
+  )
+}
+
+module "resume_pipeline" {
+  source = "../../modules/resume-pipeline"
+
+  name_prefix     = local.name
+  dist_dir        = "${path.root}/../../../../dist/workers"
+  lambda_dist_dir = "${path.root}/../../../../target/lambda"
+  ssm_prefix      = "/${local.name}"
+  bucket          = module.storage.bucket
+  bucket_arn      = module.storage.arn
+  tags            = local.tags
 
   lambda_environment = {
-    APP_URL               = var.app_url
-    S3_BUCKET             = module.storage.bucket
-    INGEST_MAX_PAGES      = tostring(var.ingest_max_pages)
-    LOCATION_LLM_FALLBACK = tostring(var.location_llm_fallback)
-    SSM_PREFIX            = "/${local.name}"
+    APP_URL    = var.app_url
+    SSM_PREFIX = "/${local.name}"
   }
 }

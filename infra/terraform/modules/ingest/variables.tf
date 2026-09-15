@@ -54,3 +54,18 @@ variable "tags" {
   type    = map(string)
   default = {}
 }
+
+variable "lambda_dist_dir" {
+  type    = string
+  default = ""
+}
+
+variable "embed_memory_mb" {
+  type    = number
+  default = 2048
+}
+
+variable "embed_timeout_s" {
+  type    = number
+  default = 120
+}

@@ -238,3 +238,78 @@ resource "aws_cloudwatch_metric_alarm" "ingest_dlq_not_empty" {
     QueueName = aws_sqs_queue.ingest_dlq.name
   }
 }
+
+module "embed_rust" {
+  source = "../lambda-fn"
+
+  name               = "${var.name_prefix}-embed"
+  source_dir         = "${var.lambda_dist_dir}/embed"
+  runtime            = "provided.al2023"
+  handler            = "bootstrap"
+  memory_mb          = var.embed_memory_mb
+  timeout_s          = var.embed_timeout_s
+  log_retention_days = var.log_retention_days
+  environment        = { ORT_DYLIB_PATH = "/var/task/lib/libonnxruntime.so" }
+  tags               = var.tags
+
+  policy_statements = []
+}
+
+module "embed_worker" {
+  source = "../lambda-fn"
+
+  name               = "${var.name_prefix}-embed-worker"
+  source_dir         = "${var.dist_dir}/ingest-embed-worker"
+  memory_mb          = 512
+  timeout_s          = var.embed_timeout_s
+  log_retention_days = var.log_retention_days
+  environment        = merge(local.shared_environment, { EMBEDDING_PROVIDER = "lambda", EMBED_FUNCTION_ARN = module.embed_rust.arn })
+  tags               = var.tags
+
+  policy_statements = [
+    {
+      actions = [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:ChangeMessageVisibility",
+      ]
+      resources = [aws_sqs_queue.embed.arn]
+    },
+    {
+      actions   = ["lambda:InvokeFunction"]
+      resources = [module.embed_rust.arn]
+    },
+    local.ssm_read_statement,
+  ]
+}
+
+resource "aws_lambda_event_source_mapping" "embed" {
+  event_source_arn                   = aws_sqs_queue.embed.arn
+  function_name                      = module.embed_worker.arn
+  batch_size                         = 5
+  maximum_batching_window_in_seconds = 10
+  function_response_types            = ["ReportBatchItemFailures"]
+
+  scaling_config {
+    maximum_concurrency = var.max_concurrency
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "embed_dlq_not_empty" {
+  alarm_name          = "${var.name_prefix}-embed-dlq-not-empty"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "ApproximateNumberOfMessagesVisible"
+  namespace           = "AWS/SQS"
+  period              = 300
+  statistic           = "Maximum"
+  threshold           = 0
+  treat_missing_data  = "notBreaching"
+  alarm_description   = "A message reached the embed dead letter queue, which always means a defect."
+  tags                = var.tags
+
+  dimensions = {
+    QueueName = aws_sqs_queue.embed_dlq.name
+  }
+}

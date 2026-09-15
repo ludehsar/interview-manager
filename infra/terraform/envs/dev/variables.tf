@@ -47,6 +47,28 @@ variable "app_url" {
   default = "http://localhost:3000"
 }
 
+variable "opensearch_enabled" {
+  type        = bool
+  description = "A managed OpenSearch domain is a standing hourly cost; jobs search falls back to postgres when this is false"
+  default     = false
+}
+
+variable "opensearch_instance_type" {
+  type    = string
+  default = "t3.small.search"
+}
+
+variable "opensearch_volume_size_gb" {
+  type    = number
+  default = 10
+}
+
+variable "schedules_enabled" {
+  type        = bool
+  description = "Ingest schedulers fire only once DATABASE_URL in SSM is a real connection string"
+  default     = false
+}
+
 variable "ingest_max_pages" {
   type    = number
   default = 5

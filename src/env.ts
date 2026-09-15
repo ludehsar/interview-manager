@@ -8,10 +8,20 @@ const serverSchema = z.object({
   AWS_REGION: z.string().default('ap-southeast-1'),
   AWS_ENDPOINT_URL: z.string().optional(),
   S3_BUCKET: z.string().optional(),
+  SSM_PREFIX: z.string().optional(),
   INGEST_QUEUE_URL: z.string().optional(),
   EMBED_QUEUE_URL: z.string().optional(),
   RESUME_STATE_MACHINE_ARN: z.string().optional(),
-  EMBEDDING_PROVIDER: z.enum(['local', 'bedrock']).default('local'),
+  EMBED_FUNCTION_ARN: z.string().optional(),
+  RENDER_FUNCTION_ARN: z.string().optional(),
+  RESUME_TARGET_SCORE: z.coerce.number().int().min(0).max(100).default(85),
+  RESUME_MAX_REVISIONS: z.coerce.number().int().min(0).max(5).default(2),
+  EMBEDDING_PROVIDER: z
+    .enum(['cli', 'lambda', 'stub', 'bedrock', 'local'])
+    .default('cli')
+    .transform((v) => (v === 'local' ? ('cli' as const) : v)),
+  EMBED_CLI_PATH: z.string().default('target/release/embed-cli'),
+  TYPST_CLI_PATH: z.string().default('target/release/typst-cli'),
   APP_URL: z.string().default('http://localhost:3000'),
   REVALIDATE_SECRET: z.string().optional(),
   ADAPTER_USER_AGENT: z.string().default('interview-manager/1.0 (+https://github.com)'),

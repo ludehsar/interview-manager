@@ -20,6 +20,7 @@ import {
 import type { JobInsert } from '@/domain/jobs/types'
 import { isSearchEnabled } from '@/search/client'
 import { deleteJobDocuments, ensureJobsIndex, indexJobRows } from '@/search/jobs-index'
+import { ensureSecrets } from '../secrets'
 import { ingestMessageSchema } from './messages'
 
 export type SweepOutcome = {
@@ -146,6 +147,7 @@ async function processRecord(record: SQSRecord): Promise<SweepOutcome> {
 }
 
 export const handler = async (event: SQSEvent): Promise<SQSBatchResponse> => {
+  await ensureSecrets()
   const batchItemFailures: { itemIdentifier: string }[] = []
 
   for (const record of event.Records) {

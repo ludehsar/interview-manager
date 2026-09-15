@@ -1,15 +1,20 @@
-use anyhow::Result;
 use lambda_runtime::{run, service_fn, Error, LambdaEvent};
 use serde::{Deserialize, Serialize};
+use typst_render_lambda::render;
 
 #[derive(Debug, Deserialize)]
 struct RenderRequest {
     resume_id: String,
+    #[serde(default = "default_template")]
     template: String,
     content: serde_json::Value,
     bucket: String,
     pdf_key: String,
     typst_key: String,
+}
+
+fn default_template() -> String {
+    "ats".to_string()
 }
 
 #[derive(Debug, Serialize)]
@@ -23,8 +28,7 @@ struct RenderResponse {
 
 async fn handler(event: LambdaEvent<RenderRequest>) -> Result<RenderResponse, Error> {
     let req = event.payload;
-    let source = build_source(&req.template, &req.content)?;
-    let pdf = compile(&source)?;
+    let (source, pdf) = render(&req.template, &req.content)?;
 
     let config = aws_config::load_defaults(aws_config::BehaviorVersion::latest()).await;
     let s3 = aws_sdk_s3::Client::new(&config);
@@ -33,7 +37,7 @@ async fn handler(event: LambdaEvent<RenderRequest>) -> Result<RenderResponse, Er
         .bucket(&req.bucket)
         .key(&req.typst_key)
         .content_type("text/plain")
-        .body(source.clone().into_bytes().into())
+        .body(source.into_bytes().into())
         .send()
         .await?;
 
@@ -52,19 +56,6 @@ async fn handler(event: LambdaEvent<RenderRequest>) -> Result<RenderResponse, Er
         page_count: pdf.page_count,
         bytes: pdf.bytes.len(),
     })
-}
-
-struct Pdf {
-    bytes: Vec<u8>,
-    page_count: u32,
-}
-
-fn build_source(_template: &str, _content: &serde_json::Value) -> Result<String> {
-    anyhow::bail!("typst template rendering is implemented in phase 3")
-}
-
-fn compile(_source: &str) -> Result<Pdf> {
-    anyhow::bail!("typst compilation is implemented in phase 3")
 }
 
 #[tokio::main]

@@ -51,6 +51,19 @@ resource "aws_s3_bucket_lifecycle_configuration" "artifacts" {
   }
 
   rule {
+    id     = "expire-resume-runs"
+    status = "Enabled"
+
+    filter {
+      prefix = "resume-runs/"
+    }
+
+    expiration {
+      days = 30
+    }
+  }
+
+  rule {
     id     = "expire-uploads"
     status = "Enabled"
     filter {

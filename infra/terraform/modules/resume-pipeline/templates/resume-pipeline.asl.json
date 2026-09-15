@@ -1,0 +1,146 @@
+{
+  "Comment": "Master and tailored resume build",
+  "StartAt": "NeedsExtract",
+  "States": {
+    "NeedsExtract": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.uploadId",
+          "IsNull": false,
+          "Next": "Extract"
+        }
+      ],
+      "Default": "KgBuild"
+    },
+
+    "Extract": {
+      "Type": "Task",
+      "Resource": "${extract_arn}",
+      "ResultPath": null,
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "KgBuild"
+    },
+
+    "KgBuild": {
+      "Type": "Task",
+      "Resource": "${kg_build_arn}",
+      "ResultPath": null,
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "Draft"
+    },
+
+    "Draft": {
+      "Type": "Task",
+      "Resource": "${draft_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 10, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "Guard"
+    },
+
+    "Guard": {
+      "Type": "Task",
+      "Resource": "${guard_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "GuardPassed"
+    },
+
+    "GuardPassed": {
+      "Type": "Choice",
+      "Choices": [
+        { "Variable": "$.guardOk", "BooleanEquals": true, "Next": "Screen" },
+        { "Variable": "$.loop", "NumericGreaterThanEquals": ${max_revisions}, "Next": "MarkFailed" }
+      ],
+      "Default": "Repair"
+    },
+
+    "Repair": {
+      "Type": "Task",
+      "Resource": "${revise_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 10, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "Guard"
+    },
+
+    "Screen": {
+      "Type": "Task",
+      "Resource": "${screen_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 10, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "ScoreReached"
+    },
+
+    "ScoreReached": {
+      "Type": "Choice",
+      "Choices": [
+        { "Variable": "$.screenerScore", "NumericGreaterThanEquals": ${target_score}, "Next": "Render" },
+        { "Variable": "$.loop", "NumericGreaterThanEquals": ${max_revisions}, "Next": "Render" }
+      ],
+      "Default": "Revise"
+    },
+
+    "Revise": {
+      "Type": "Task",
+      "Resource": "${revise_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 10, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "Screen"
+    },
+
+    "Render": {
+      "Type": "Task",
+      "Resource": "${render_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "AtsScore"
+    },
+
+    "AtsScore": {
+      "Type": "Task",
+      "Resource": "${ats_score_arn}",
+      "Retry": [{ "ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 5, "MaxAttempts": 2, "BackoffRate": 2 }],
+      "Catch": [{ "ErrorEquals": ["States.ALL"], "ResultPath": "$.failure", "Next": "MarkFailed" }],
+      "Next": "Persist"
+    },
+
+    "Persist": {
+      "Type": "Task",
+      "Resource": "${persist_arn}",
+      "End": true
+    },
+
+    "MarkFailed": {
+      "Type": "Task",
+      "Resource": "${persist_arn}",
+      "Parameters": {
+        "runId.$": "$.runId",
+        "userId.$": "$.userId",
+        "kind.$": "$.kind",
+        "resumeId.$": "$.resumeId",
+        "jobId.$": "$.jobId",
+        "uploadId.$": "$.uploadId",
+        "evidenceKey.$": "$.evidenceKey",
+        "promptVersion.$": "$.promptVersion",
+        "loop.$": "$.loop",
+        "guardOk.$": "$.guardOk",
+        "guardErrors.$": "$.guardErrors",
+        "screenerScore.$": "$.screenerScore",
+        "atsScore.$": "$.atsScore",
+        "pdfKey.$": "$.pdfKey",
+        "typstKey.$": "$.typstKey",
+        "failed": true,
+        "error.$": "$.failure.Cause"
+      },
+      "Next": "Failed"
+    },
+
+    "Failed": {
+      "Type": "Fail",
+      "Error": "ResumePipelineFailed",
+      "Cause": "A step in the resume pipeline failed. See resume_runs.error."
+    }
+  }
+}

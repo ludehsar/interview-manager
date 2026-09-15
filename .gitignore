@@ -46,4 +46,11 @@ target/
 .terraform/
 *.tfstate
 *.tfstate.*
+terraform.tfvars
+*.auto.tfvars
 .clerk/
+crates/embed/models/
+crates/typst-render/fonts/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/

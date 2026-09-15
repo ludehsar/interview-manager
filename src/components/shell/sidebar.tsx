@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Bookmark, Briefcase, LayoutGrid, PanelLeftClose, PanelLeftOpen, UserRound } from 'lucide-react'
+import { Bookmark, Briefcase, FileText, LayoutGrid, PanelLeftClose, PanelLeftOpen, UserRound } from 'lucide-react'
 import { ClerkLoaded, ClerkLoading, Show, SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import { Logo } from '@/components/shell/logo'
 import { Button } from '@/components/ui/button'
@@ -30,7 +30,10 @@ const GROUPS: { label: string; items: NavItem[] }[] = [
   },
   {
     label: 'Account',
-    items: [{ label: 'Profile', href: '/profile', icon: UserRound, requiresAuth: true }],
+    items: [
+      { label: 'Resumes', href: '/resumes', icon: FileText, requiresAuth: true },
+      { label: 'Profile', href: '/profile', icon: UserRound, requiresAuth: true },
+    ],
   },
 ]
 

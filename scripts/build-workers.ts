@@ -5,6 +5,7 @@ import { build } from 'esbuild'
 const WORKERS = [
   'ingest/dispatch',
   'ingest/worker',
+  'ingest/embed-worker',
   'ingest/match',
   'resume/extract',
   'resume/kg-build',
@@ -12,6 +13,7 @@ const WORKERS = [
   'resume/guard',
   'resume/screen',
   'resume/revise',
+  'resume/render',
   'resume/ats-score',
   'resume/persist',
 ]

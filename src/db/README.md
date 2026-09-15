@@ -11,6 +11,12 @@ Drizzle cannot express a generated column, a partial index or an HNSW operator c
 `0004_location_workplace.sql`; only the partial `jobs_workplace_sort_idx` is
 invisible to Drizzle there.
 
+`0006_profile_knowledge.sql` adds the `profile_uploads` table, `resume_runs.metrics`,
+and two more indexes Drizzle cannot express: `knowledge_chunks_text_fts_idx`
+(a GIN index over the `to_tsvector('english', text)` expression, which the hybrid
+retrieval in `src/domain/resume/retrieval.ts` needs) and `kg_nodes_label_trgm_idx`
+(`gin_trgm_ops` on `normalized_label`).
+
 Consequence: `drizzle-kit push` and `drizzle-kit generate` will propose dropping
 them. Never run `push` against a real database, and review every generated
 migration for `DROP INDEX` / `DROP COLUMN "search_vector"` before applying it.

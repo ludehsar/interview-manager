@@ -187,3 +187,228 @@ Next.js 16 notes: `proxy.ts` replaces middleware; Turbopack default; `use cache`
 - Live response shapes of each ATS endpoint (probe script is the source of truth; failures auto-disable).
 - `fastembed` ONNX runtime on arm64 Lambda binary size (< 250 MB unzipped) — else x86_64 or Titan v2 fallback.
 - BGE-small recall on job↔profile matching after a 50-job eyeball test; swap by config if weak.
+
+## 5b. Phase 2 decisions that revise the sections above
+
+- **The schema was already complete (revises §5 Phase 2/3).** Every table Phase 2 and Phase 3 need —
+  `profiles`, `profile_entries`, `entry_bullets`, `answer_memory`, `knowledge_chunks`, `kg_nodes`,
+  `kg_edges`, `resumes`, `resume_runs`, `llm_calls` — shipped in `0000_init.sql`, with the HNSW
+  `vector_cosine_ops` indexes in `0001`. Phase 2 needed exactly one migration,
+  `0006_profile_knowledge.sql`.
+- **Deployed Lambdas could not reach Neon or Anthropic.** `envs/dev` passed `SSM_PREFIX` and the
+  ingest module granted `ssm:GetParameter*`, but nothing in `src/` ever read SSM and `DATABASE_URL`
+  was not in `lambda_environment`, so the deployed `ingest-worker` could not open a connection.
+  `src/aws/ssm.ts` + `ensureSecrets()` at the top of every handler closes this. Any new worker must
+  call `ensureSecrets()` before it touches `db()`.
+- **`output_config.effort` is not sent on the `fast` tier.** `claude-haiku-4-5` rejects it, and
+  extract, kg-build and the gap-interview quantifier are all Haiku. `generateStructured` now omits
+  `effort` when `tier === 'fast'`. `pnpm probe:ai fast reason` is the one-command check.
+- **Uploads get their own table, not `resume_runs` (revises §3 line 86).** `resume_runs.kind` is the
+  `resume_kind` enum (MASTER|TAILORED) and has nowhere to put an S3 key or a filename.
+  `profile_uploads` carries `s3_key`, `status`, the raw `extracted` payload and `entry_ids` — the
+  last is what makes accepting an extraction idempotent and undoable, since re-accepting deletes the
+  entries the previous accept created. `resume_runs` also gained `metrics jsonb` for the UI.
+- **Prompts are `.ts`, not `.md` (revises §4 line 126).** `scripts/build-workers.ts` runs esbuild with
+  no `.md` loader, so prompts export frozen template strings from `src/ai/prompts/*.ts`.
+- **The resume PDF goes to Haiku as a base64 document block, not via the Files API.** The browser
+  PUTs to a presigned `uploads/{userId}/{uploadId}.pdf`; the extract step `GetObject`s it and sends
+  one `document` block ahead of the text block. The Files API would be a second store with its own
+  deletion obligation against Phase 5's "deletion leaves zero rows/objects", and S3 already has the
+  30-day lifecycle and CORS. Never set `citations` on that block — citations plus structured outputs
+  is an HTTP 400. Grounding comes from the guard, not from citations. PDF only in v1.
+- **Two more indexes live only in raw SQL (extends §3 line 87).** `knowledge_chunks_text_fts_idx`
+  (GIN over `to_tsvector('english', text)`) is what the FTS half of hybrid retrieval needs, and
+  `kg_nodes_label_trgm_idx` is `gin_trgm_ops` on `normalized_label`. Drizzle can express neither and
+  will propose dropping both.
+- **Retrieval is reciprocal-rank fusion, k=60 (implements §2).** `src/domain/resume/retrieval.ts`
+  fuses a 40-candidate vector ranking with a 40-candidate `websearch_to_tsquery` ranking in one
+  statement, then expands one hop over `kg_edges` in both directions with a depth-bounded recursive
+  CTE. When no embedding is available the vector CTE degrades to empty and the query is pure FTS, so
+  search keeps working before the model is built.
+- **Embeddings are baked into the binary, int8-quantized (revises §1 and §5a line 162).**
+  `crates/embed` uses `fastembed` with a `UserDefinedEmbeddingModel` over `include_bytes!` weights,
+  so it never contacts HuggingFace at runtime. The quantized `model_quantized.onnx` is ~33 MB against
+  ~133 MB for fp32; fp32 would still fit the 250 MB unzipped cap but would push the zip past the
+  50 MB direct-upload limit. `scripts/fetch-assets.sh` pulls the weights and the Inter faces with
+  pinned sha256s into gitignored paths.
+- **fastembed must be built without its default features.** `default` pulls `hf-hub-native-tls`,
+  which drags in `openssl-sys` and fails to cross-compile; `image-models` is dead weight. The crate
+  uses `default-features = false, features = ["ort-download-binaries-rustls-tls"]`.
+- **Statically linking the ONNX Runtime into a `provided.al2023` zip does not work.** Three walls, in
+  order: `cargo lambda build --arm64` fails because ORT is C++ and its prebuilt static archive needs
+  GNU libstdc++ while Zig ships libc++, so lld cannot resolve `std::__cxx11::*`; a Debian bookworm
+  container fails because GCC 12 lacks `_M_replace_cold`, which the archive requires (GCC 13+); and a
+  Debian trixie container links successfully but produces an artifact needing `GLIBC_2.38` and
+  `GLIBCXX_3.4.31`, whereas Lambda's `provided.al2023` ships glibc 2.34 and GLIBCXX 3.4.29 — it would
+  build clean and then fail at runtime. `-static-libstdc++` does not rescue this, because the glibc
+  floor is set by the build image regardless. Verify any candidate artifact with
+  `readelf -V bootstrap | grep -oE 'GLIBC_[0-9.]+|GLIBCXX_[0-9.]+' | sort -uV | tail`, not by whether
+  the build succeeded.
+  The deployable shape is `ort`'s `load-dynamic` feature: ship the official `libonnxruntime.so`
+  (20 MB, itself built against glibc 2.27 / GLIBCXX 3.4.21) next to the binary, point `ORT_DYLIB_PATH`
+  at `/var/task/lib/libonnxruntime.so`, and build in an Amazon Linux 2023 container so the glibc floor
+  matches the runtime. The resulting `bootstrap` needs only GLIBC_2.34 and no libstdc++ at all, because
+  no C++ is statically linked into it any more. 58 MB unzipped, 33 MB zipped — inside both the 250 MB
+  and the 50 MB direct-upload limits. Verified by running the same code in an `amazonlinux:2023`
+  container: it returns the same cosines as the macOS build (0.747 related, 0.346 unrelated).
+  `scripts/build-crates-lambda.sh` is that build, and `pnpm crates:build` runs it.
+- **Which ORT the crate links is a Cargo feature.** `bundled` (the default) uses
+  `ort/download-binaries` so `cargo test`, `cargo build` and the local `embed-cli` work with no extra
+  setup; `dynamic` switches to `load-dynamic` for the Lambda artifact. The container build passes
+  `--no-default-features --features dynamic`. Keep the default as `bundled` — making `dynamic` the
+  default would break every local `cargo test` with a missing-dylib error.
+- **Compute and persistence are split in the embed path (extends §3 line 67).** The Rust Lambda is
+  pure — texts in, vectors out — and a TypeScript `ingest/embed-worker` drains the embed queue, loads
+  the rows, invokes it and writes the vectors back. That keeps all Postgres knowledge in `src/db`
+  instead of duplicating the schema in Rust. `EMBEDDING_PROVIDER` selects `cli` (spawns
+  `embed-cli`, the local dev path), `lambda`, or `stub` (deterministic hashed unit vectors, so CI and
+  unit tests never need the model). The embed queue finally has a consumer.
+- **`embedMessageSchema` is a discriminated union.** Phase 1 wrote `{v:1, jobIds}` messages to the
+  embed queue and never drained them; those still parse alongside the new
+  `{v:2, userId, target, ids}`, and the worker skips the legacy ones rather than failing the batch.
+- **`kg-build` is one Haiku call per `profile_entries` row** — cheap, parallelizable and idempotent
+  per entry. Nodes are upserted on the existing `kg_nodes_identity_key (user_id, type,
+  normalized_label)`, so edges are addressed by `TYPE:normalized label` rather than by the model's
+  invented keys. An entry's chunks are replaced wholesale, so re-running is clean.
+
+- **The one-hop walk unions the edge table, not the recursive term.** Postgres allows exactly one
+  reference to a `WITH RECURSIVE` term in its recursive branch; joining `walk` once per edge direction
+  parses in Drizzle and fails at runtime with `42P19`, which no SQL-text test can see. `expandOneHopQuery`
+  now builds an `undirected(from_id, to_id)` CTE — every edge in both directions — and the recursive
+  branch joins `walk` once. `buildEvidencePack` calls this on every resume build, so the bug reached
+  Phase 3 too.
+- **`pnpm check:retrieval` verifies hybrid retrieval with no LLM spend.** It seeds three entries with
+  bullets, chunks and embeds them through the local `embed-cli`, upserts a four-node graph, then asserts
+  the RRF ranking returns the right chunk for three skill queries, the node vector search finds
+  `Kubernetes` for "container orchestration", the one-hop walk reaches all four nodes, and the evidence
+  pack contains every seeded entry — the Phase 2 "vector search returns the right chunk" check. Seeded
+  rows are deleted in a `finally`; `--keep` leaves them for inspection and `--user` targets a specific
+  user.
+
+- **Accepting an extraction fills the profile basics that are still blank.** The extract already returns
+  name, headline, location, email, phone and links, but nothing wrote them anywhere, so a freshly-uploaded
+  profile produced a resume with an empty header. `acceptExtraction` now fills only the fields the user has
+  left empty — never overwriting something they typed — and returns `basicsFilled` so the toast can say so.
+- **A bare count is a metric; a hedge has to be a whole word.** `deriveMetricStatus` only recognised a
+  number with a unit, so "covered 140 services across 9 teams" read as `MISSING` and the answered bullet
+  went straight back into the gap queue — the interview loop could never close. `COUNT` matches a number
+  followed by a word, excluding a standalone 1900-2099 year so "shipped in 2021" still reads as no figure.
+  Separately `HEDGE` had no word boundaries, so "c**over**ed" and "dis**cover**ed" matched `over` and
+  downgraded a hard number to `ESTIMATED`.
+- **One entry cannot fail the whole knowledge graph.** `buildKnowledgeGraph` ran the per-entry Haiku calls
+  in a bare loop, so a single unparseable response aborted the build and left the profile half-graphed. Each
+  entry is now caught, recorded in `failed[]`, and still chunked from its own text so retrieval keeps working;
+  the run throws only when every entry fails. Node labels are bounded by `boundedLabel` at both the identity
+  key and the insert, because truncating in only one of the two silently drops every edge on that node.
+
+## 5c. Phase 3 decisions that revise the sections above
+
+- **The drafter never writes a fact it could get wrong.** `ResumeDraftSchema` (`src/ai/schemas/draft.ts`)
+  is deliberately smaller than `ResumeDocumentSchema`: the model returns a headline, a summary, section
+  order, and per entry a list of bullets keyed by `entryId` and `sourceBulletId`. Titles, organisations,
+  locations, dates and contact details are copied from the evidence pack by `materializeDocument`
+  (`src/domain/resume/document.ts`), so `ENTRY_INVENTED`, `ORG_INVENTED` and `CONTACT_MISMATCH` are
+  unreachable rather than merely detected, and the draft costs fewer output tokens.
+- **Ids are derived, not generated.** `res_<sourceBulletId>`, `res_<entryId>`, `sec_<heading>`, with
+  `res_<entryId>_n<i>` for a bullet the model wrote from the graph rather than from a profile bullet.
+  A screener note and a reviser edit from loop 1 still address the same bullet in loop 2, which is what
+  makes the revise loop converge instead of drifting. An entry the pack does not contain is dropped, and
+  an entry listed in two sections is placed once.
+- **`metricStatus` is derived by `deriveMetricStatus`, not by the model** — the same function the profile
+  editor uses, so the guard's `XYZ_INCOMPLETE` check tests the text, not the model's opinion of it.
+- **The screener does not decide the score.** Weights live in `src/domain/resume/rubric.ts`; the model
+  scores each criterion 0-100 with a comment and `scoreFromRubric` computes the weighted total that the
+  `ScoreReached` choice state gates on. A model cannot talk its own resume past the gate, and the panel
+  the user reads carries the weight next to each criterion.
+- **Repair and revise are the same Lambda but not the same call (implements §5 Phase 3).** A guard
+  failure re-drafts in full with the violations appended to the task, because an edit op cannot add back
+  a `BULLET_DROPPED` or `ENTRY_DROPPED`. A screener failure returns edits. Both paths increment `$.loop`,
+  so the two `MaxRevisions` guards in the ASL share one budget.
+- **Every edit is re-guarded before it is stored.** The ASL goes `Revise → Screen` with no guard in
+  between, so `applySafeEdits` (`src/domain/resume/revise.ts`) applies the batch, and when the guard gets
+  worse falls back to applying edits one at a time, keeping only those that do not raise the error count.
+  A rejected edit is counted in `resume_runs.metrics.editsRejected`, not silently dropped.
+- **All three reasoning steps share one cache prefix (implements §2).** `stableSystem` is `RUBRIC_BLOCK`
+  and nothing else, `cachedContext` is the serialized evidence pack at a 1h TTL, and the step's role text
+  moved into the volatile user turn. Anthropic caching is prefix-based, so a per-step system block would
+  have given each route its own cache and lost the pack's tokens on every call; with an identical prefix,
+  screen and revise read the cache the draft wrote.
+- **`runPipeline` mirrors the state machine for local runs.** `src/domain/resume/pipeline.ts` runs the
+  same steps in the same order with the same loop bounds, so `pnpm resume:build --user usr_...` builds a
+  resume with no AWS at all; `--from draft|screen|render` skips ahead against an existing master resume,
+  and `--dry` still just prints the evidence pack.
+- **`buildMasterResume` fails the run when `RESUME_STATE_MACHINE_ARN` is unset** instead of leaving a
+  queued row the UI polls forever. A server action is the wrong place to run a multi-minute Opus pipeline,
+  so local builds go through `pnpm resume:build`.
+- **Render is two Lambdas, not one (extends the embed split of §5b).** The ASL's `Render` state passed
+  `"content.$": "$.content"` to the Rust function, but the pipeline state has never carried the document —
+  it lives in `resumes.content`, and putting a whole resume on the state would spend the Step Functions
+  payload budget on every transition. `resume-render` (TypeScript) reads the row, invokes the pure
+  `typst-render` function through `RENDER_FUNCTION_ARN`, and writes the keys back, so all Postgres
+  knowledge stays in `src/db`. Only `resume-render` is in the state machine's invoke policy.
+- **The ATS report is stored, not recomputed.** Scoring it needs the rendered PDF's text layer, so the
+  page cannot rebuild it the way it rebuilds the guard report from the evidence pack. `0007_ats_report.sql`
+  adds `resumes.ats_report jsonb` beside `screener_report`, and `atsScoreStep` writes the headings,
+  coverage and round-trip detail the ATS tab shows.
+- **`pnpm check:render` verifies the template with no LLM spend.** It renders a document through the local
+  `typst-cli`, reads the PDF back out of S3, and scores the parse-back — the Phase 3 "PDF text parses back
+  with all headings" check, runnable on the built-in fixture (`pnpm check:render`) or on a stored resume
+  (`--user usr_… --resume res_…`). Template changes are verified this way before any Opus call.
+- **A model's string maxima are a hint, not a contract (revises §4).** `output_config.format` carries the
+  zod schema's `maxLength`, but the model overruns it: Opus wrote past `comment.max(400)` on nearly every
+  screen, and Haiku past `label.max(120)` on kg-build. `beta.messages.parse` turns that into a thrown
+  `too_big` and the whole run dies, discarding output already paid for. `generateStructured` now calls
+  `beta.messages.create`, parses the JSON itself, and `clampOversized` truncates exactly the paths zod
+  reports as `too_big` — strings sliced, arrays trimmed — retrying at most three times and rethrowing
+  anything clamping cannot fix. Transforms are not an option: `betaZodOutputFormat` rejects them with
+  "Transforms cannot be represented in JSON Schema".
+- **Model pricing is keyed on the id the API returns, which is dated.** `MODELS.fast` is `claude-haiku-4-5`
+  but the response says `claude-haiku-4-5-20251001`, so the pricing lookup missed and every Haiku call —
+  extract, kg-build, the interview quantifier — was recorded in `llm_calls` at $0. `rateForModel` falls back
+  to the id with the `-YYYYMMDD` suffix stripped and warns once for a model it still cannot price, so the
+  Phase 3 cost gate is measuring real money.
+- **Derived ids do not fit a 40-character bound.** `res_<entryId>_n<i>` is 43 characters against a real
+  `ent_` id, so the first bullet the drafter wrote from the graph rather than from a profile bullet failed
+  `ResumeDocumentSchema`. Document ids now use `resumeIdSchema` (64), shared with the edit and screener note
+  schemas that have to address them; the fixtures used short ids, which is why no test caught it.
+- **The screener must be told what is scaffolding.** `serializeResume` gives it `[res_blt_…]` tokens,
+  `x:/y:/z:` decomposition lines and `evidence:` lines so notes and edits can address a bullet, but nothing
+  said these are not on the printed page. Opus scored them: ATS format 55 ("orphaned x:/y:/z: fragments plus
+  a [res_blt_…] token a parser will ingest"), six-second scan 72 — points the reviser cannot win back, which
+  is why the score plateaued. `SCREEN_ROLE` now names each scaffold line and says to judge layout, scan and
+  ATS format on the printed page only. It is in the volatile user turn, so the shared cache prefix is intact.
+- **The extract step is told today's date, and does not judge dates at all.** Haiku's sense of "now" predates
+  the resume it is reading, so it flagged 04/2026, 01-07/2026 and 11-12/2025 as future dates on a resume read
+  in September 2026. `extractTask(today)` states the real date in the volatile user turn — never in the cached
+  `EXTRACT_SYSTEM` block, which would invalidate the prefix every day — and the system prompt now forbids any
+  warning about a date being past or future. Merely stating the date was not enough on its own: the model kept
+  the topic and produced a different kind of noise ("dates are in past but close to reference date; verify"),
+  and still mislabelled a start date as an end date. `dateWarnings` in `src/domain/profile/date-warnings.ts`
+  replaces all of it — a future start or end, an end before its start, and a current role that also carries an
+  end date, compared in whole months with a bare year treated as the whole year. Same rule as `metricStatus`:
+  derived in code, not asked of the model.
+- **The bullet editor derives XYZ and the metric status while you type.** `metricStatus` is free and instant —
+  `deriveMetricStatus` is pure, so the editor runs the same function the server runs on save and shows the badge
+  live; the two can never disagree. The X/Y/Z split is a language problem, so it is one Haiku call
+  (`resume.decompose`, ~$0.0008, ~2 s) debounced 700 ms after typing stops. It only fires when the text actually
+  changed, when it is at least `MIN_DECOMPOSE_CHARS` long, and when at least one field is still auto-owned — a
+  field the user has typed into is never overwritten, and when all three are hand-written no call is made at all.
+  `MIN_DECOMPOSE_CHARS` lives in `xyz.ts`, not `decompose.ts`: the editor is a client component, and importing
+  the module that pulls in `@/ai/client` puts the Anthropic SDK in the browser bundle and fails the build on
+  `dns`/`fs`/`net`.
+- **OpenSearch is a Terraform module but is off by default (revises §1).** `modules/search` builds a managed
+  domain, but a `t3.small.search` costs $0.056/hr in `ap-southeast-1` — about $41/month against a $5 budget
+  alarm and the "≈$0 fixed cost" goal, so `opensearch_enabled` defaults to `false` and `searchJobs` keeps
+  falling back to the Postgres query. With the flag off the plan is a clean no-op: `lambda_environment` uses
+  `merge()` to add `OPENSEARCH_INDEX` only when the module exists, rather than setting it to an empty string.
+- **The domain uses fine-grained access control, not SigV4.** `src/search/client.ts` signs nothing — it sends
+  HTTP Basic auth — so the domain enables `advanced_security_options` with an internal user database and an
+  open access policy, which is the combination AWS requires authentication to come from FGAC. That in turn
+  forces `encrypt_at_rest`, `node_to_node_encryption` and `enforce_https`, all of which the module sets.
+  The master password is a `random_password` written to `/interview-manager-dev/OPENSEARCH_PASSWORD`; unlike
+  the other three SSM parameters it does land in Terraform state, because `master_user_password` is a resource
+  attribute and there is no placeholder-plus-`ignore_changes` trick for it. Switching to SigV4 would remove
+  that, and needs a signing change in the search client.
+- **Workers load the search credentials from SSM.** `WORKER_SECRETS` gained `OPENSEARCH_URL`, `_USERNAME` and
+  `_PASSWORD`. `GetParameters` returns unknown names under `InvalidParameters` rather than failing, so the list
+  is safe to ship while the domain does not exist — the worker simply finds no URL and uses Postgres.

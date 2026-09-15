@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "dist/**",
     "target/**",
     "src/adapters/__fixtures__/**",
+    // Editor and plugin tooling, not application code.
+    ".claude/**",
   ]),
 ]);
 

@@ -21,3 +21,11 @@ output "dispatch_function_name" {
 output "worker_function_name" {
   value = module.worker.name
 }
+
+output "embed_function_arn" {
+  value = module.embed_rust.arn
+}
+
+output "embed_worker_function_name" {
+  value = module.embed_worker.name
+}
